@@ -1,151 +1,50 @@
-const holeBxs = document.querySelectorAll(".game__holeBx");
-const holes = document.querySelectorAll(".game__hole");
-const scoreText = document.querySelector(".game__score");
-const timeText = document.querySelector(".game__time");
-const currentScoreText = document.querySelector('.game__currentScore');
-const maxScoreText = document.querySelector('.game__maxScore');
-const hammer = document.querySelector('.hammer__bx');
-const startBtn = document.querySelector('.game__startBtn');
-const startBx = document.querySelector('.game__startBx');
+const gameFields = document.querySelectorAll('.game__field');
 
-let currentRandomHole;
-let score = 0;
-let maxScore = 0;
-let initialTime = 4;
-let time = initialTime;
+let activeFields = [];
 
 
-window.addEventListener('load', () => {
-    let loadedMaxScore = localStorage.getItem("holeMaxScore");
+class Field{
+    constructor(minTimeInterval, maxTimeInterval){
+        this.currentField = null;
+        this.oldField = null;
+        this.currentAnimal = null;
 
-    if(loadedMaxScore !== null && loadedMaxScore !== 0){
-        maxScore = loadedMaxScore;
-
-        maxScoreText.innerText = maxScore;
-    }
-})
-
-
-
-startBtn.addEventListener('click', () => {
-    startBx.style.display = "none";
-    hammer.style.display = "block";
-
-    document.body.style.cursor = "none";
-    
-    gameLoop();
-    timeLoop();
-})
-
-window.addEventListener('mousedown', () => {
-    hammer.animate(
-        {
-            rotate: "-50deg"
-        },
-        {
-            duration: 100,
-            fill: "forwards"
-        }
-    )
-})
-
-window.addEventListener('mouseup', () => {
-    hammer.animate(
-        {
-            rotate: "0deg"
-        },
-        {
-            duration: 100,
-            fill: "forwards"
-        }
-    )
-})
-
-
-holeBxs.forEach((holeBx, index) => {
-    holeBx.addEventListener('click', () => {
-        if(index === currentRandomHole){
-            score += 10;
-
-            scoreText.innerText = score;
-
-            holes[currentRandomHole].style.display = "none";
-            currentRandomHole = undefined;
-        }
-    })
-})
-
-
-function randomNum(max){
-    return Math.floor(Math.random() * max);
-}
-
-
-let gameLoopInterval,
-    timeLoopInterval;
-
-function gameLoop(){
-    gameLoopInterval = setInterval(() => {
-        if(currentRandomHole !== undefined) holes[currentRandomHole].style.display = "none";
-
-        currentRandomHole = randomNum(9);
-
-        holes[currentRandomHole].style.display = "block";
-    }, 1000);
-}
-
-function timeLoop(){
-    timeLoopInterval = setInterval(() => {
-        time--;
-
-        timeText.innerText = time;
-
-        if(time <= 0){
-            endGame();
-        }
-    }, 1000);
-}
-
-function endGame(){
-    clearInterval(timeLoopInterval);
-    clearInterval(gameLoopInterval);
-
-    if(currentRandomHole !== undefined) holes[currentRandomHole].style.display = "none";
-
-    currentScoreText.innerText = score;
-
-    if(maxScore < score){
-        maxScore = score;
-    
-        maxScoreText.innerText = maxScore;
-        
-        localStorage.setItem("holeMaxScore", maxScore);
+        this.minTimeInterval = minTimeInterval;
+        this.maxTimeInterval = maxTimeInterval;
     }
 
-    startBx.style.display = "flex";
-    hammer.style.display = "none";
+    randomField(){
+        if(this.currentField !== null) gameFields[this.currentField].style.backgroundImage = null;
 
-    document.body.style.cursor = "auto";
+        do {
+            this.currentField = randomNumber(0, 8);
+        } while (activeFields.includes(this.currentField));
 
-    time = initialTime;
-    timeText.innerText = time;
+        let fieldIndex = activeFields.indexOf(this.oldField);
+        activeFields.splice(fieldIndex, 1);
 
-    score = 0;
-    scoreText.innerText = score;
+        this.oldField = this.currentField;
+        activeFields.push(this.currentField);
+
+
+        this.currentAnimal = randomNumber(1, 4);
+
+        gameFields[this.currentField].style.backgroundImage = `url(./res/images/animal${this.currentAnimal}.png)`;
+
+        setTimeout(() => {
+            this.randomField();
+        }, randomNumber(this.minTimeInterval, this.maxTimeInterval));
+    }
 }
 
+const firstField = new Field(600, 1000);
+firstField.randomField();
 
-let mouseX,
-    mouseY;
+const secondField = new Field(200, 600);
+secondField.randomField();
 
-function hammerMove(){
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
 
-        hammer.style.left = `${mouseX}px`;
-        hammer.style.top = `${mouseY}px`;
-    })
+
+function randomNumber(min, max){
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-hammerMove();
