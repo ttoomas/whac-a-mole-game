@@ -1,6 +1,7 @@
-const gameFieldBx = document.querySelector('.game__fields');
+const gameFieldBx = document.querySelector('.game__fieldContainer');
 
 let gameFields = [];
+let animalAnimationTime = 300;
 
 let activeFields = [];
 let points = 0;
@@ -35,14 +36,27 @@ class Field{
 
         this.minTimeInterval = minTimeInterval;
         this.maxTimeInterval = maxTimeInterval;
+
+        this.checkCurrentField();
     }
 
-    randomField(){
+    checkCurrentField(){
         if(this.currentField !== null){
-            gameFields[this.currentField].style.backgroundImage = null;
-            gameFields[this.currentField].removeAttribute('data-animal-id');
-        }
+            gameFields[this.currentField].style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
+            
+            setTimeout(() => {
+                gameFields[this.currentField].src = "";
+                gameFields[this.currentField].removeAttribute('data-animal-id');
 
+                this.changeField();
+            }, animalAnimationTime);
+        }
+        else{
+            this.changeField();
+        }        
+    }
+
+    changeField(){
         do {
             this.currentField = randomNumber(0, 8);
         } while (activeFields.includes(this.currentField));
@@ -58,20 +72,22 @@ class Field{
             this.currentAnimal = randomNumber(1, 4);
         } while (this.currentAnimal === 4 && points < (animalTypes[3].pointValue * -1))
 
-        gameFields[this.currentField].style.backgroundImage = `url(./res/images/animal${this.currentAnimal}.png)`;
+        gameFields[this.currentField].src = `./res/images/animal${this.currentAnimal}.png`;
         gameFields[this.currentField].setAttribute('data-animal-id', this.currentAnimal);
 
+        gameFields[this.currentField].style.animation = `animalFadeIn ${animalAnimationTime}ms ease-in-out forwards`;
+
         setTimeout(() => {
-            this.randomField();
+            this.checkCurrentField();
         }, randomNumber(this.minTimeInterval, this.maxTimeInterval));
     }
 }
 
-const firstField = new Field(500, 1000);
-firstField.randomField();
+const firstField = new Field(700, 1200);
+
 
 // const secondField = new Field(200, 600);
-// secondField.randomField();
+// secondField.checkCurrentField();
 
 
 
@@ -92,8 +108,8 @@ class EventListener{
     }
 }
 
-const eventListener = new EventListener();
-eventListener.fieldOnClick();
+// const eventListener = new EventListener();
+// eventListener.fieldOnClick();
 
 
 
@@ -108,10 +124,18 @@ function createGameFields(count){
     gameFieldBx.innerText = '';
 
     for (let i = 0; i < count; i++) {
-        let newGameField = document.createElement('div');
-        newGameField.classList.add('game__field');
+        let newGameFieldHtml = `
+            <div class="game__field">
+                <img src="" alt="" class="game__animal" draggable="false">
+                <div class="game__block">
+                    <img src="./res/images/block-half-top.png" alt="" class="block__top" draggable="false">
+                    <img src="./res/images/block-half-bottom.png" alt="" class="block__bottom" draggable="false">
+                </div>
+            </div>
+        `;
 
-        gameFieldBx.appendChild(newGameField);
-        gameFields.push(newGameField);
+        gameFieldBx.insertAdjacentHTML('beforeend', newGameFieldHtml);
     }
+
+    gameFields = gameFieldBx.querySelectorAll('.game__animal');
 }
