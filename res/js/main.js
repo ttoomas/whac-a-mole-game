@@ -5,6 +5,7 @@ let animalAnimationTime = 300;
 
 let activeFields = [];
 let points = 0;
+let fieldsCount = 9;
 
 let animalTypes = [
     {
@@ -25,7 +26,7 @@ let animalTypes = [
     }
 ]
 
-createGameFields(9);
+createGameFields(fieldsCount);
 
 
 class Field{
@@ -43,6 +44,7 @@ class Field{
     checkCurrentField(){
         if(this.currentField !== null){
             gameFields[this.currentField].style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
+            gameFields[this.currentField].classList.remove('animalActive');
             
             setTimeout(() => {
                 gameFields[this.currentField].src = "";
@@ -58,7 +60,7 @@ class Field{
 
     changeField(){
         do {
-            this.currentField = randomNumber(0, 8);
+            this.currentField = randomNumber(0, (fieldsCount - 1));
         } while (activeFields.includes(this.currentField));
 
         let fieldIndex = activeFields.indexOf(this.oldField);
@@ -76,6 +78,7 @@ class Field{
         gameFields[this.currentField].setAttribute('data-animal-id', this.currentAnimal);
 
         gameFields[this.currentField].style.animation = `animalFadeIn ${animalAnimationTime}ms ease-in-out forwards`;
+        gameFields[this.currentField].classList.add('animalActive');
 
         setTimeout(() => {
             this.checkCurrentField();
@@ -83,33 +86,38 @@ class Field{
     }
 }
 
-const firstField = new Field(700, 1200);
-
-
+const firstField = new Field(700, 1000);
 // const secondField = new Field(200, 600);
-// secondField.checkCurrentField();
 
 
 
 class EventListener{
+    constructor(){
+        this.fieldOnClick();
+    }
+
     fieldOnClick(){
         window.addEventListener('click', (e) => {
-            if(!e.target.classList.contains('game__field') || !e.target.style.backgroundImage) return;
+            if(!e.target.classList.contains('game__field')) return;
 
-            let animalId = e.target.getAttribute('data-animal-id');
+            let gameFieldAnimal = e.target.querySelector('.game__animal');
+
+            if(!gameFieldAnimal.classList.contains('animalActive')) return;
+
+            let animalId = gameFieldAnimal.getAttribute('data-animal-id');
             let animalStats = animalTypes[animalId - 1];
 
             points += animalStats.pointValue;
 
-            e.target.style.backgroundImage = null;
+            gameFieldAnimal.style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
+            gameFieldAnimal.classList.remove('animalActive');
 
             console.log(points);
         })
     }
 }
 
-// const eventListener = new EventListener();
-// eventListener.fieldOnClick();
+const eventListener = new EventListener();
 
 
 
