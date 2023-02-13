@@ -10,7 +10,33 @@
 </head>
 <body>
 
+    <!-- new home section - start btn, your lvl, xp to next lvl-->
+    <!-- welcome section - introduce game mechanics, animals and their points, level system -->
+
     <main class="game">
+        <div class="game__info">
+            <p class="game__time">
+                Time Left:
+                <span class="game__timeText">1:00</span>
+            </p>
+            <p class="game__lvl">
+                Level:
+                <span class="game__lvlText">1</span>
+            </p>
+            <p class="game__pts">
+                Points:
+                <span class="game__ptsText">0</span>
+            </p>
+            <div class="game__progress">
+                <p class="progress__text">Level Progress</p>
+                
+                <div class="progress__container">
+                    <span class="progress__bar progressGreen"></span>
+                    <span class="progress__bar progressRed"></span>
+                </div>
+            </div>
+        </div>
+
         <div class="game__fieldContainer">
             <div class="game__field">
                 <img src="./res/images/animal1.png" alt="" class="game__animal" draggable="false">

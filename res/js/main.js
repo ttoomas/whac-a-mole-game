@@ -3,7 +3,9 @@ const gameFieldBx = document.querySelector('.game__fieldContainer');
 let gameFields = [];
 let animalAnimationTime = 300;
 
-let activeFields = [];
+let activeFields = [],
+    activeAnimals = [];
+
 let points = 0;
 let fieldsCount = 9;
 
@@ -32,11 +34,15 @@ createGameFields(fieldsCount);
 class Field{
     constructor(minTimeInterval, maxTimeInterval){
         this.currentField = null;
-        this.oldField = null;
         this.currentAnimal = null;
-
+        
+        this.oldField = null;
+        this.oldAnimal = null;
+        
         this.minTimeInterval = minTimeInterval;
         this.maxTimeInterval = maxTimeInterval;
+
+        this.fieldInterval = null;
 
         this.checkCurrentField();
     }
@@ -59,20 +65,32 @@ class Field{
     }
 
     changeField(){
+        // Change field
         do {
             this.currentField = randomNumber(0, (fieldsCount - 1));
         } while (activeFields.includes(this.currentField));
 
-        let fieldIndex = activeFields.indexOf(this.oldField);
-        activeFields.splice(fieldIndex, 1);
+        if(this.oldField !== null){
+            let fieldIndex = activeFields.indexOf(this.oldField);
+            activeFields.splice(fieldIndex, 1);
+        }
 
         this.oldField = this.currentField;
         activeFields.push(this.currentField);
 
 
+        // Change animal
         do {
             this.currentAnimal = randomNumber(1, 4);
-        } while (this.currentAnimal === 4 && points < (animalTypes[3].pointValue * -1))
+        } while ((this.currentAnimal === 4 && points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
+
+        if(this.oldAnimal !== null){
+            let animalIndex = activeAnimals.indexOf(this.oldAnimal);
+            activeAnimals.splice(animalIndex, 1);
+        }
+
+        this.oldAnimal = this.currentAnimal;
+        activeAnimals.push(this.currentAnimal);
 
         gameFields[this.currentField].src = `./res/images/animal${this.currentAnimal}.png`;
         gameFields[this.currentField].setAttribute('data-animal-id', this.currentAnimal);
@@ -80,15 +98,44 @@ class Field{
         gameFields[this.currentField].style.animation = `animalFadeIn ${animalAnimationTime}ms ease-in-out forwards`;
         gameFields[this.currentField].classList.add('animalActive');
 
-        setTimeout(() => {
+        this.fieldInterval = setTimeout(() => {
             this.checkCurrentField();
-        }, randomNumber(this.minTimeInterval, this.maxTimeInterval));
+        }, randomNumber((this.minTimeInterval + animalAnimationTime), (this.maxTimeInterval + animalAnimationTime)));
+    }
+
+    deleteInterval(){
+        clearInterval(this.fieldInterval);
+
+        gameFields[this.currentField].style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
+        gameFields[this.currentField].classList.remove('animalActive');
+        
+        setTimeout(() => {
+            gameFields[this.currentField].src = "";
+            gameFields[this.currentField].removeAttribute('data-animal-id');
+
+            if(this.oldField !== null){
+                let fieldIndex = activeFields.indexOf(this.oldField);
+                activeFields.splice(fieldIndex, 1);
+            }
+    
+            if(this.oldAnimal !== null){
+                let animalIndex = activeAnimals.indexOf(this.oldAnimal);
+                activeAnimals.splice(animalIndex, 1);
+            }
+
+            console.log("Interval deleted successfully");
+        }, animalAnimationTime);
     }
 }
 
-const firstField = new Field(700, 1000);
-// const secondField = new Field(200, 600);
+const firstField = new Field(1000, 1200);
+new Field(400, 600);
 
+setTimeout(() => {
+    console.log('y');
+
+    firstField.deleteInterval();
+}, 4000);
 
 
 class EventListener{
