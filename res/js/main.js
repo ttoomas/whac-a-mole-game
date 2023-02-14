@@ -1,4 +1,13 @@
 const gameFieldBx = document.querySelector('.game__fieldContainer');
+const timeText = document.querySelector('.game__timeText');
+const lvlText = document.querySelector('.game__lvlText');
+const ptsText = document.querySelector('.game__ptsText');
+const progressText = document.querySelector('.progress__text');
+const progressBar = document.querySelector('.progress__bar.progressGreen');
+const reachLvlText = document.querySelector('.reach__lvlText');
+const reachPtsText = document.querySelector('.reach__ptsText');
+
+const startGameBtn = document.querySelector('.start__btn');
 
 let gameFields = [];
 let animalAnimationTime = 300;
@@ -6,7 +15,6 @@ let animalAnimationTime = 300;
 let activeFields = [],
     activeAnimals = [];
 
-let points = 0;
 let fieldsCount = 9;
 
 let animalTypes = [
@@ -26,7 +34,23 @@ let animalTypes = [
         id: 4,
         pointValue: -20
     }
-]
+];
+
+let gameSetting = {
+    time: 10,
+    currentLvl: 1,
+    nextLvlPts: 25
+}
+
+let currentTime;
+let currentProgressStep;
+let currentProgress = 0;
+
+let gameStats = {
+    points: 0,
+    allTimePoints: 0
+}
+
 
 createGameFields(fieldsCount);
 
@@ -43,6 +67,7 @@ class Field{
         this.maxTimeInterval = maxTimeInterval;
 
         this.fieldInterval = null;
+        currentProgressStep = (100 / gameSetting.nextLvlPts);
 
         this.checkCurrentField();
     }
@@ -82,7 +107,7 @@ class Field{
         // Change animal
         do {
             this.currentAnimal = randomNumber(1, 4);
-        } while ((this.currentAnimal === 4 && points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
+        } while ((this.currentAnimal === 4 && gameStats.points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
 
         if(this.oldAnimal !== null){
             let animalIndex = activeAnimals.indexOf(this.oldAnimal);
@@ -128,15 +153,6 @@ class Field{
     }
 }
 
-const firstField = new Field(1000, 1200);
-new Field(400, 600);
-
-setTimeout(() => {
-    console.log('y');
-
-    firstField.deleteInterval();
-}, 4000);
-
 
 class EventListener{
     constructor(){
@@ -154,17 +170,84 @@ class EventListener{
             let animalId = gameFieldAnimal.getAttribute('data-animal-id');
             let animalStats = animalTypes[animalId - 1];
 
-            points += animalStats.pointValue;
+            gameStats.points += animalStats.pointValue;
+            gameStats.allTimePoints += animalStats.pointValue;
+            currentProgress += (currentProgressStep * animalStats.pointValue);
 
             gameFieldAnimal.style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
             gameFieldAnimal.classList.remove('animalActive');
 
-            console.log(points);
+            ptsText.innerText = gameStats.points;
+            progressBar.style.width = `${currentProgress}%`;
         })
     }
 }
 
 const eventListener = new EventListener();
+
+
+
+// Start game
+let gameInterval;
+let testField;
+
+startGameBtn.addEventListener('click', () => {
+    console.log("Start game");
+
+    startGame();
+})
+
+function startGame(){
+    document.body.classList.add('gameActive');
+
+    testField = new Field(500, 600);
+
+    currentTime = gameSetting.time;
+    timeText.innerText = currentTime;
+
+    gameInterval = setInterval(() => {
+        currentTime--;
+
+        timeText.innerText = currentTime;
+
+        if(currentTime <= 0){
+            endGame();
+        }
+    }, 1000);
+}
+
+function endGame(){
+    clearInterval(gameInterval);
+
+    testField.deleteInterval();
+    
+    resetGameVar();
+
+    document.body.classList.remove('gameActive');
+}
+
+function resetGameVar(){
+    // Reset game vars, lvl up if there is enought points
+
+    if(gameStats.points >= gameSetting.nextLvlPts){
+        // Lvl up
+        gameSetting.currentLvl++;
+        gameSetting.nextLvlPts += Math.round(gameSetting.nextLvlPts / 3);
+
+        lvlText.innerText = gameSetting.currentLvl;
+        reachPtsText.innerText = gameSetting.nextLvlPts;
+        reachLvlText.innerText = (gameSetting.currentLvl + 1);
+    }
+
+
+    currentTime = gameSetting.time;
+    currentProgress = 0;
+    gameStats.points = 0;
+
+    timeText.innerText = currentTime
+    ptsText.innerText = gameStats.points;
+    progressBar.style.width = `${currentProgress}%`;
+}
 
 
 
