@@ -8,6 +8,26 @@ const reachLvlText = document.querySelector('.reach__lvlText');
 const reachPtsText = document.querySelector('.reach__ptsText');
 
 const startGameBtn = document.querySelector('.start__btn');
+const hammerCursor = document.querySelector('.cursor__hammerBx');
+const circleCursorInner = document.querySelector('.circle__inner');
+const circleCursorOuter = document.querySelector('.circle__outer');
+const activeCircles = document.querySelectorAll('.circleCursor');
+
+let mousePos = {
+    x: 0,
+    y: 0
+};
+
+let hammerSize = {
+    width: hammerCursor.clientWidth,
+    height: hammerCursor.clientHeight
+};
+
+let circleSize = {
+    // width: circleCursor.clientWidth,
+    // height: circleCursor.clientHeight
+}
+
 
 let gameFields = [];
 let animalAnimationTime = 300;
@@ -39,7 +59,8 @@ let animalTypes = [
 let gameSetting = {
     time: 10,
     currentLvl: 1,
-    nextLvlPts: 25
+    nextLvlPts: 25,
+    activeFieldsCount: 1
 }
 
 let currentTime;
@@ -147,8 +168,6 @@ class Field{
                 let animalIndex = activeAnimals.indexOf(this.oldAnimal);
                 activeAnimals.splice(animalIndex, 1);
             }
-
-            console.log("Interval deleted successfully");
         }, animalAnimationTime);
     }
 }
@@ -157,6 +176,9 @@ class Field{
 class EventListener{
     constructor(){
         this.fieldOnClick();
+        this.getMousePos();
+        this.hammerOnClick();
+        this.activateCircleCursor();
     }
 
     fieldOnClick(){
@@ -181,26 +203,106 @@ class EventListener{
             progressBar.style.width = `${currentProgress}%`;
         })
     }
+
+    getMousePos(){
+        window.addEventListener('mousemove', (e) => {
+            mousePos.x = e.clientX;
+            mousePos.y = e.clientY;
+
+            // console.log(e.target.className.includes("circleCursor"));
+
+            this.hammerMove();
+            this.circleMove();
+        })
+    }
+
+    hammerMove(){
+        hammerCursor.animate(
+            {
+                left: `${mousePos.x - (hammerSize.width / 2)}px`,
+                top: `${mousePos.y - (hammerSize.height / 2)}px`
+            },
+            {
+                duration: 200,
+                fill: "forwards"
+            }
+        )
+    }
+
+    hammerOnClick(){
+        window.addEventListener('mousedown', () => {
+            hammerCursor.animate(
+                {
+                    transform: "rotate(-32deg)"
+                },
+                {
+                    duration: 150,
+                    fill: "forwards"
+                }
+            )
+        })
+
+        window.addEventListener('mouseup', () => {
+            hammerCursor.animate(
+                {
+                    transform: "rotate(20deg)"
+                },
+                {
+                    duration: 150,
+                    fill: "forwards"
+                }
+            )
+        })
+    }
+
+    circleMove(){
+        circleCursorInner.style.left = `${mousePos.x}px`;
+        circleCursorInner.style.top = `${mousePos.y}px`;
+
+        circleCursorOuter.animate(
+            {
+                left: `${mousePos.x}px`,
+                top: `${mousePos.y}px`
+            },
+            {
+                duration: 100,
+                fill: "forwards"
+            }
+        )
+    }
+
+    activateCircleCursor(){
+        activeCircles.forEach((circle) => {
+            circle.addEventListener('mouseenter', () => {
+                // circleCursorInner.classList.add('activeCircle');
+            })
+
+            circle.addEventListener('mouseleave', () => {
+                // circleCursorInner.classList.remove('activeCircle');
+            })
+        })
+    }
 }
 
-const eventListener = new EventListener();
+new EventListener();
 
 
 
 // Start game
 let gameInterval;
 let testField;
+let fieldsArr = [];
 
 startGameBtn.addEventListener('click', () => {
-    console.log("Start game");
-
     startGame();
 })
 
 function startGame(){
     document.body.classList.add('gameActive');
 
-    testField = new Field(500, 600);
+    for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
+        fieldsArr.push(new Field(500, 600));
+    }
 
     currentTime = gameSetting.time;
     timeText.innerText = currentTime;
@@ -219,16 +321,18 @@ function startGame(){
 function endGame(){
     clearInterval(gameInterval);
 
-    testField.deleteInterval();
-    
+    fieldsArr.forEach(field => {
+        field.deleteInterval();
+    });
+
+    fieldsArr = [];
+
     resetGameVar();
 
     document.body.classList.remove('gameActive');
 }
 
 function resetGameVar(){
-    // Reset game vars, lvl up if there is enought points
-
     if(gameStats.points >= gameSetting.nextLvlPts){
         // Lvl up
         gameSetting.currentLvl++;
