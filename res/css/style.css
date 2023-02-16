@@ -234,7 +234,6 @@ body.gameActive .start{
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 9999;
 }
 .cursor__circleBx{
     width: 100%;
@@ -252,21 +251,21 @@ body.gameActive .start{
     left: 100px;
     top: 100px;
     transform: translate(-50%, -50%);
-    z-index: 3;
     transition: width 500ms ease-in-out, height 500ms ease-in-out;
+    z-index: 99999999999999999;
 }
 .circle__outer{
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: black;
+    background-color: white;
     mix-blend-mode: difference;
     border: 1px solid white;
     position: absolute;
     left: 100px;
     top: 100px;
     transform: translate(-50%, -50%);
-    z-index: 2;
+    z-index: 99999999999999999;
 }
 .circle__inner.activeCircle{
     width: 45px;
