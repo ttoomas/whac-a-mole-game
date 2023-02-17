@@ -12,20 +12,26 @@ const hammerCursor = document.querySelector('.cursor__hammerBx');
 const circleCursorInner = document.querySelector('.circle__inner');
 const circleCursorOuter = document.querySelector('.circle__outer');
 const activeCircles = document.querySelectorAll('.circleCursor');
+const gameCursors = document.querySelector('.game__cursors');
 
 let mousePos = {
     x: 0,
     y: 0
 };
 
+let screenSize = {
+    width: document.body.clientWidth,
+    height: document.body.clientHeight 
+};
+
 let hammerSize = {
-    width: hammerCursor.clientWidth,
-    height: hammerCursor.clientHeight
+    width: parseInt(getComputedStyle(hammerCursor).width),
+    height: parseInt(getComputedStyle(hammerCursor).height)
 };
 
 let circleSize = {
-    // width: circleCursor.clientWidth,
-    // height: circleCursor.clientHeight
+    width: circleCursorOuter.clientWidth,
+    height: circleCursorOuter.clientHeight
 }
 
 
@@ -57,7 +63,7 @@ let animalTypes = [
 ];
 
 let gameSetting = {
-    time: 10,
+    time: 100,
     currentLvl: 1,
     nextLvlPts: 25,
     activeFieldsCount: 1
@@ -179,6 +185,7 @@ class EventListener{
         this.getMousePos();
         this.hammerOnClick();
         this.activateCircleCursor();
+        this.windowResizeSize();
     }
 
     fieldOnClick(){
@@ -217,69 +224,128 @@ class EventListener{
     }
 
     hammerMove(){
-        hammerCursor.animate(
-            {
-                left: `${mousePos.x - (hammerSize.width / 2)}px`,
-                top: `${mousePos.y - (hammerSize.height / 2)}px`
-            },
-            {
-                duration: 200,
-                fill: "forwards"
-            }
-        )
+        this.hammerSpeed = 200;
+
+        if(
+            mousePos.x - (hammerSize.width * 0.8) > 0 &&
+            mousePos.x + (hammerSize.width * 0.8) < screenSize.width
+        ){
+            hammerCursor.animate(
+                {
+                    left: `${mousePos.x - (hammerSize.width / 2)}px`,
+                },
+                {
+                    duration: this.hammerSpeed,
+                    fill: "forwards"
+                }
+            )
+        }
+
+        if(
+            mousePos.y - (hammerSize.height * 0.8) > 0 &&
+            mousePos.y + (hammerSize.height * 0.8) < screenSize.height
+        ){
+            hammerCursor.animate(
+                {
+                    top: `${mousePos.y - (hammerSize.height / 2)}px`
+                },
+                {
+                    duration: this.hammerSpeed,
+                    fill: "forwards"
+                }
+            )
+        }
     }
 
     hammerOnClick(){
         window.addEventListener('mousedown', () => {
-            hammerCursor.animate(
-                {
-                    transform: "rotate(-32deg)"
-                },
-                {
-                    duration: 150,
-                    fill: "forwards"
-                }
-            )
+            if(currentCursor !== 0){
+                hammerCursor.animate(
+                    {
+                        transform: "rotate(-52deg)"
+                    },
+                    {
+                        duration: 150,
+                        fill: "forwards",
+                        easing: "ease-in-out"
+                    }
+                )
+            }
         })
 
         window.addEventListener('mouseup', () => {
-            hammerCursor.animate(
-                {
-                    transform: "rotate(20deg)"
-                },
-                {
-                    duration: 150,
-                    fill: "forwards"
-                }
-            )
+            if(currentCursor !== 0){
+                hammerCursor.animate(
+                    {
+                        transform: "rotate(0deg)"
+                    },
+                    {
+                        duration: 150,
+                        fill: "forwards",
+                        easing: "ease-in-out"
+                    }
+                )
+            }
         })
     }
 
     circleMove(){
-        circleCursorInner.style.left = `${mousePos.x}px`;
-        circleCursorInner.style.top = `${mousePos.y}px`;
+        this.circleSpeed = 500;
 
-        circleCursorOuter.animate(
-            {
-                left: `${mousePos.x}px`,
-                top: `${mousePos.y}px`
-            },
-            {
-                duration: 100,
-                fill: "forwards"
-            }
-        )
+        if(
+            mousePos.x - (circleSize.width / 2) > 0 &&
+            mousePos.x + (circleSize.width / 2) < screenSize.width
+        ){
+            circleCursorInner.style.left = `${mousePos.x}px`;
+
+            circleCursorOuter.animate(
+                {
+                    left: `${mousePos.x}px`
+                },
+                {
+                    duration: this.circleSpeed,
+                    fill: "forwards"
+                }
+            )
+        }
+
+
+        if(
+            mousePos.y - (circleSize.height / 2) > 0 &&
+            mousePos.y + (circleSize.height / 2) < screenSize.height
+        ){
+            circleCursorInner.style.top = `${mousePos.y}px`;
+
+            circleCursorOuter.animate(
+                {
+                    top: `${mousePos.y}px`
+                },
+                {
+                    duration: this.circleSpeed,
+                    fill: "forwards"
+                }
+            )
+        }
     }
 
     activateCircleCursor(){
         activeCircles.forEach((circle) => {
             circle.addEventListener('mouseenter', () => {
-                // circleCursorInner.classList.add('activeCircle');
+                circleCursorInner.classList.add('circleHoverActive');
             })
 
             circle.addEventListener('mouseleave', () => {
-                // circleCursorInner.classList.remove('activeCircle');
+                circleCursorInner.classList.remove('circleHoverActive');
             })
+        })
+    }
+
+    windowResizeSize(){
+        window.addEventListener('resize', () => {
+            screenSize = {
+                width: document.body.clientWidth,
+                height: document.body.clientHeight
+            }
         })
     }
 }
@@ -295,6 +361,7 @@ let fieldsArr = [];
 
 startGameBtn.addEventListener('click', () => {
     startGame();
+    changeCursor();
 })
 
 function startGame(){
@@ -314,6 +381,7 @@ function startGame(){
 
         if(currentTime <= 0){
             endGame();
+            changeCursor();
         }
     }, 1000);
 }
@@ -380,4 +448,24 @@ function createGameFields(count){
     }
 
     gameFields = gameFieldBx.querySelectorAll('.game__animal');
+}
+
+
+let currentCursor = 0;
+
+function changeCursor(){
+    if(currentCursor === 0){
+        // Hammer
+        currentCursor = 1;
+
+        gameCursors.classList.remove('circleActive');
+        gameCursors.classList.add('hammerActive');
+    }
+    else{
+        // Circle
+        currentCursor = 0;
+
+        gameCursors.classList.remove('hammerActive');
+        gameCursors.classList.add('circleActive');
+    }
 }

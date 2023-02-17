@@ -240,6 +240,7 @@ body.gameActive .start{
     height: 100%;
     pointer-events: none;
     position: relative;
+    display: none;
 }
 .circle__inner{
     width: 20px;
@@ -251,12 +252,12 @@ body.gameActive .start{
     left: 100px;
     top: 100px;
     transform: translate(-50%, -50%);
-    transition: width 500ms ease-in-out, height 500ms ease-in-out;
+    transition: width 300ms ease-in-out, height 300ms ease-in-out;
     z-index: 99999999999999999;
 }
 .circle__outer{
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background-color: white;
     mix-blend-mode: difference;
@@ -265,11 +266,15 @@ body.gameActive .start{
     left: 100px;
     top: 100px;
     transform: translate(-50%, -50%);
+    transition: opacity 300ms ease-in-out;
     z-index: 99999999999999999;
 }
-.circle__inner.activeCircle{
-    width: 45px;
-    height: 45px;
+.circle__inner.circleHoverActive{
+    width: 56px;
+    height: 56px;
+}
+.circle__inner.circleHoverActive ~ .circle__outer{
+    opacity: 0;
 }
 
 .cursor__hammerBx{
@@ -278,10 +283,20 @@ body.gameActive .start{
     position: absolute;
     left: 0;
     top: 0;
+    z-index: 99999999999999999;
 
     display: none;
 }
 .cursor__hammer{
     width: 100%;
     height: 100%;
+    transform: rotate(20deg);
+    transform-origin: right top;
+}
+
+.game__cursors.circleActive .cursor__circleBx{
+    display: block;
+}
+.game__cursors.hammerActive .cursor__hammerBx{
+    display: block;
 }
