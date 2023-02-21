@@ -66,7 +66,9 @@ let gameSetting = {
     time: 100,
     currentLvl: 1,
     nextLvlPts: 25,
-    activeFieldsCount: 1
+    activeFieldsCount: 1,
+    playerName: null,
+    welcomeSlideshow: false
 }
 
 let currentTime;
@@ -224,7 +226,7 @@ class EventListener{
     }
 
     hammerMove(){
-        this.hammerSpeed = 200;
+        this.hammerSpeed = 150;
 
         if(
             mousePos.x - (hammerSize.width * 0.8) > 0 &&
@@ -365,6 +367,10 @@ startGameBtn.addEventListener('click', () => {
 })
 
 function startGame(){
+    lvlText.innerText = gameSetting.currentLvl;
+    reachPtsText.innerText = gameSetting.nextLvlPts;
+    reachLvlText.innerText = (gameSetting.currentLvl + 1);
+
     document.body.classList.add('gameActive');
 
     for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
@@ -405,10 +411,6 @@ function resetGameVar(){
         // Lvl up
         gameSetting.currentLvl++;
         gameSetting.nextLvlPts += Math.round(gameSetting.nextLvlPts / 3);
-
-        lvlText.innerText = gameSetting.currentLvl;
-        reachPtsText.innerText = gameSetting.nextLvlPts;
-        reachLvlText.innerText = (gameSetting.currentLvl + 1);
     }
 
 
@@ -469,3 +471,48 @@ function changeCursor(){
         gameCursors.classList.add('circleActive');
     }
 }
+
+
+// WELCOME SECTION - SLIDESHOW
+const welcome = document.querySelector('.welcome');
+const welcomeContainers = document.querySelectorAll('.welcomeContainer');
+const welcomeNextBtns = document.querySelectorAll('.welcomeNextBtn');
+const welcomeNameInput = document.querySelector('.welcomeNameInput');
+
+welcomeNextBtns.forEach((welcomeBtn, index) => {
+    welcomeBtn.addEventListener('click', () => {
+        // Name input
+        if(welcomeContainers[index].classList.contains('welcomeName')){
+            if(welcomeNameInput.value.length >= 2){
+                welcomeNameInput.classList.remove('nameInputErr');
+
+                gameSetting.playerName = welcomeNameInput.value;
+                // Save to localstorage
+                welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
+                welcomeContainers[index + 1].style.animation = "welcomeSlideIn 200ms ease-in-out forwards";
+
+                console.log(gameSetting);
+            }
+            else{
+                welcomeNameInput.classList.add('nameInputErr');
+            }
+        }
+
+        // Last slide
+        else if(welcomeContainers[index].classList.contains('welcomeEndSlideshow')){
+            // localstorage save that slideshow was done (gamesetting.slideshow)
+            console.log("last");
+
+            welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
+            setTimeout(() => {
+                welcome.style.display = "none";
+            }, 200);
+        }
+
+        else{
+            console.log("none");
+            welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
+            welcomeContainers[index + 1].style.animation = "welcomeSlideIn 200ms ease-in-out forwards";
+        }
+    })
+})

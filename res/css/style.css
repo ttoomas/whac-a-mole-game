@@ -18,7 +18,7 @@ body{
     font-family: 'Caveat', cursive;
     position: relative;
 }
-p, h1, h2{
+p, h1, h2, h3, h4, h5, h6{
     margin: 0;
 }
 
@@ -174,7 +174,7 @@ p, h1, h2{
     align-items: center;
     justify-content: center;
     background-color: black;
-    z-index: 999;
+    z-index: 10;
 }
 .start__btn{
     font-size: 40px;
@@ -299,4 +299,132 @@ body.gameActive .start{
 }
 .game__cursors.hammerActive .cursor__hammerBx{
     display: block;
+}
+
+
+/* WELCOME SECTION */
+.welcome{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    overflow: hidden;
+}
+.welcomeContainer{
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    padding-inline: 100px;
+    padding-block: 94px 114px;
+    z-index: 100;
+}
+.welcome .welcomeContainer:nth-of-type(1){
+    z-index: 110;
+}
+.welcome .welcomeContainer:nth-of-type(2){
+    z-index: 109;
+}
+.welcome .welcomeContainer:nth-of-type(3){
+    z-index: 108;
+}
+.welcome .welcomeContainer:nth-of-type(4){
+    z-index: 107;
+}
+.welcome .welcomeContainer:nth-of-type(5){
+    z-index: 106;
+}
+.welcome .welcomeContainer:nth-of-type(6){
+    z-index: 105;
+}
+.welcome .welcomeContainer:nth-of-type(7){
+    z-index: 104;
+}
+.welcome .welcomeContainer:nth-of-type(8){
+    z-index: 103;
+}
+.welcome .welcomeContainer:nth-of-type(9){
+    z-index: 102;
+}
+
+.welcomeTextBx{
+    margin-top: auto;
+    text-align: center;
+}
+.welcomeTitle{
+    font-size: 68px;
+    font-weight: 700;
+    margin-block: 0px 20px;
+}
+.welcomeContainer.welcomeName .welcomeTitle{
+    margin-block: 20px 40px;
+}
+.welcomeDesc{
+    font-size: 34px;
+    font-weight: 400;
+}
+.welcomeAnimalBx .welcomeDesc{
+    font-size: 32px;
+    text-align: right;
+}
+.welcomeNextBtn{
+    align-self: flex-end;
+    margin-top: auto;
+    background-color: black;
+    border: 2px solid white;
+    outline: none;
+    color: white;
+    padding: 10px 28px;
+    font-size: 32px;
+    font-weight: 600;
+    border-radius: 13px;
+}
+.welcomeNameInput{
+    background-color: black;
+    border: 2px solid white;
+    color: white;
+    outline: none;
+    font-size: 26px;
+    width: 300px;
+    padding: 12px 20px;
+    transition: border-color 150ms ease-in-out;
+}
+.welcomeNameInput.nameInputErr{
+    border-color: red;
+}
+.welcomeInfo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    max-width: 1040px;
+}
+.welcomeAnimalImg{
+    height: 350px;
+}
+
+@keyframes welcomeSlideIn {
+    0%{
+        transform: translateX(100%);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+
+@keyframes welcomeSlideOut {
+    0%{
+        transform: translateX(0);
+    }
+    100%{
+        transform: translateX(-100%);
+    }
 }
