@@ -30,8 +30,8 @@ let hammerSize = {
 };
 
 let circleSize = {
-    width: circleCursorOuter.clientWidth,
-    height: circleCursorOuter.clientHeight
+    width: parseInt(getComputedStyle(circleCursorOuter).width),
+    height: parseInt(getComputedStyle(circleCursorOuter).height)
 }
 
 
@@ -63,10 +63,12 @@ let animalTypes = [
 ];
 
 let gameSetting = {
-    time: 100,
+    time: 10,
     currentLvl: 1,
     nextLvlPts: 25,
     activeFieldsCount: 1,
+    points: 0,
+    allTimePoints: 0,
     playerName: null,
     welcomeSlideshow: false
 }
@@ -74,11 +76,6 @@ let gameSetting = {
 let currentTime;
 let currentProgressStep;
 let currentProgress = 0;
-
-let gameStats = {
-    points: 0,
-    allTimePoints: 0
-}
 
 
 createGameFields(fieldsCount);
@@ -136,7 +133,7 @@ class Field{
         // Change animal
         do {
             this.currentAnimal = randomNumber(1, 4);
-        } while ((this.currentAnimal === 4 && gameStats.points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
+        } while ((this.currentAnimal === 4 && gameSetting.points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
 
         if(this.oldAnimal !== null){
             let animalIndex = activeAnimals.indexOf(this.oldAnimal);
@@ -201,14 +198,14 @@ class EventListener{
             let animalId = gameFieldAnimal.getAttribute('data-animal-id');
             let animalStats = animalTypes[animalId - 1];
 
-            gameStats.points += animalStats.pointValue;
-            gameStats.allTimePoints += animalStats.pointValue;
+            gameSetting.points += animalStats.pointValue;
+            gameSetting.allTimePoints += animalStats.pointValue;
             currentProgress += (currentProgressStep * animalStats.pointValue);
 
             gameFieldAnimal.style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
             gameFieldAnimal.classList.remove('animalActive');
 
-            ptsText.innerText = gameStats.points;
+            ptsText.innerText = gameSetting.points;
             progressBar.style.width = `${currentProgress}%`;
         })
     }
@@ -407,12 +404,7 @@ function endGame(){
 }
 
 function resetGameVar(){
-    if(gameStats.points >= gameSetting.nextLvlPts){
-        // Lvl up
-        gameSetting.currentLvl++;
-        gameSetting.nextLvlPts += Math.round(gameSetting.nextLvlPts / 3);
-    }
-
+    if(gameStats.points >= gameSetting.nextLvlPts) levelUp();
 
     currentTime = gameSetting.time;
     currentProgress = 0;
@@ -421,6 +413,25 @@ function resetGameVar(){
     timeText.innerText = currentTime
     ptsText.innerText = gameStats.points;
     progressBar.style.width = `${currentProgress}%`;
+}
+
+function levelUp(){
+    gameSetting.currentLvl++;
+    gameSetting.nextLvlPts += Math.round(gameSetting.nextLvlPts / 3);
+
+    lvlText.innerText = gameSetting.currentLvl;
+    reachPtsText.innerText = gameSetting.nextLvlPts;
+    reachLvlText.innerText = (gameSetting.currentLvl + 1);
+
+    if(gameSetting.currentLvl % 3 === 0){
+        gameSetting.activeFieldsCount++;
+    }
+
+    if(gameSetting.currentLvl % 2 === 0){
+        gameSetting.time += Math.ceil(gameSetting.time / 5) * 5;
+
+        console.log(gameSetting.time);
+    }
 }
 
 
