@@ -1,3 +1,4 @@
+const game = document.querySelector('.game');
 const gameFieldBx = document.querySelector('.game__fieldContainer');
 const timeText = document.querySelector('.game__timeText');
 const lvlText = document.querySelector('.game__lvlText');
@@ -13,6 +14,10 @@ const circleCursorInner = document.querySelector('.circle__inner');
 const circleCursorOuter = document.querySelector('.circle__outer');
 const activeCircles = document.querySelectorAll('.circleCursor');
 const gameCursors = document.querySelector('.game__cursors');
+
+const welcome = document.querySelector('.welcome');
+const welcomeBackName = document.querySelector('.welcomeBackName');
+const preloadCover = document.querySelector('.preloadCover');
 
 let mousePos = {
     x: 0,
@@ -59,6 +64,10 @@ let animalTypes = [
     {
         id: 4,
         pointValue: -20
+    },
+    {
+        id: 5,
+        pointValue: 5
     }
 ];
 
@@ -78,6 +87,35 @@ let currentProgressStep;
 let currentProgress = 0;
 
 
+// Onload get game settings
+function onLoadGameSetting(){
+    let loadedGameSetting = JSON.parse(localStorage.getItem('moleGameSetting'));
+
+    if(loadedGameSetting === null || !loadedGameSetting.welcomeSlideshow){
+        welcome.classList.add('initialActive');
+    }
+
+    else{
+        welcome.classList.add('backActive');
+        welcomeBackName.innerText = loadedGameSetting.playerName;
+
+        gameSetting = loadedGameSetting;
+
+        // Set points and progress bar
+        ptsText.innerText = gameSetting.points;
+
+        currentProgressStep = (100 / gameSetting.nextLvlPts);
+        currentProgress = currentProgressStep * gameSetting.points;
+
+        progressBar.style.width = `${currentProgress}%`;
+    }
+
+    preloadCover.style.display = "none";
+}
+
+onLoadGameSetting();
+
+// Game fields
 createGameFields(fieldsCount);
 
 
@@ -131,9 +169,14 @@ class Field{
 
 
         // Change animal
-        do {
-            this.currentAnimal = randomNumber(1, 4);
-        } while ((this.currentAnimal === 4 && gameSetting.points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
+        if(gameSetting.bossLevel){
+            this.currentAnimal = 5
+        }
+        else{
+            do {
+                this.currentAnimal = randomNumber(1, 4);
+            } while ((this.currentAnimal === 4 && gameSetting.points < (animalTypes[3].pointValue * -1)) || (activeAnimals.includes(4) && this.currentAnimal === 4));
+        }
 
         if(this.oldAnimal !== null){
             let animalIndex = activeAnimals.indexOf(this.oldAnimal);
@@ -364,18 +407,44 @@ startGameBtn.addEventListener('click', () => {
 })
 
 function startGame(){
-    lvlText.innerText = gameSetting.currentLvl;
-    reachPtsText.innerText = gameSetting.nextLvlPts;
-    reachLvlText.innerText = (gameSetting.currentLvl + 1);
-
     document.body.classList.add('gameActive');
 
-    for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
-        fieldsArr.push(new Field(500, 600));
-    }
+    if(gameSetting.bossLevel){
+        // Boss level
 
-    currentTime = gameSetting.time;
-    timeText.innerText = currentTime;
+        game.classList.add('bossLevel');
+
+        for (let i = 0; i < 8; i++) {
+            let minTime = randomNumber(100, 800);
+            let maxTime;
+
+            do {
+                maxTime = randomNumber(400, 1500);
+            } while (maxTime <= (minTime + 150))
+
+            console.log(minTime, maxTime);
+
+            fieldsArr.push(new Field(minTime, maxTime));
+        }
+
+        currentTime = 10;
+        timeText.innerText = currentTime;
+    }
+    
+    else{
+        lvlText.innerText = gameSetting.currentLvl;
+        reachPtsText.innerText = gameSetting.nextLvlPts;
+        reachLvlText.innerText = (gameSetting.currentLvl + 1);
+
+        game.classList.add('normalLevel');
+    
+        for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
+            fieldsArr.push(new Field(500, 600));
+        }
+    
+        currentTime = gameSetting.time;
+        timeText.innerText = currentTime;
+    }
 
     gameInterval = setInterval(() => {
         currentTime--;
@@ -404,34 +473,61 @@ function endGame(){
 }
 
 function resetGameVar(){
-    if(gameStats.points >= gameSetting.nextLvlPts) levelUp();
+    if(gameSetting.bossLevel) bossLevelUp();
+    else if(gameSetting.points >= gameSetting.nextLvlPts) levelUp();
 
     currentTime = gameSetting.time;
-    currentProgress = 0;
-    gameStats.points = 0;
-
-    timeText.innerText = currentTime
-    ptsText.innerText = gameStats.points;
-    progressBar.style.width = `${currentProgress}%`;
+    timeText.innerText = currentTime    
+    
+    localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
 }
 
+// LVL
+// LVL 1 - NORMAL   LVL 2 - NORMAL  LVL 3 - BOSS, ONLY ONE SPECIAL ANIMAL, FASTER GAME, NO NEED TO LEVEL UP
 function levelUp(){
+    // Deduct points
+    gameSetting.points -= gameSetting.nextLvlPts;
+
+    ptsText.innerText = gameSetting.points;
+
+    // Lvl UP
     gameSetting.currentLvl++;
-    gameSetting.nextLvlPts += Math.round(gameSetting.nextLvlPts / 3);
+    gameSetting.nextLvlPts += Math.ceil(gameSetting.nextLvlPts / 5) * 2;
 
     lvlText.innerText = gameSetting.currentLvl;
     reachPtsText.innerText = gameSetting.nextLvlPts;
     reachLvlText.innerText = (gameSetting.currentLvl + 1);
 
+    // Set progress bar
+    currentProgressStep = (100 / gameSetting.nextLvlPts);
+    currentProgress = currentProgressStep * gameSetting.points;
+
+    progressBar.style.width = `${currentProgress}%`;
+
+    // Boss
     if(gameSetting.currentLvl % 3 === 0){
-        gameSetting.activeFieldsCount++;
+        gameSetting.bossLevel = true;
     }
+}
 
-    if(gameSetting.currentLvl % 2 === 0){
-        gameSetting.time += Math.ceil(gameSetting.time / 5) * 5;
+function bossLevelUp(){
+    // Lvl UP
+    gameSetting.currentLvl++;
 
-        console.log(gameSetting.time);
-    }
+    lvlText.innerText = gameSetting.currentLvl;
+    reachLvlText.innerText = (gameSetting.currentLvl + 1);
+
+    // Set progress bar
+    currentProgressStep = (100 / gameSetting.nextLvlPts);
+    currentProgress = currentProgressStep * gameSetting.points;
+
+    progressBar.style.width = `${currentProgress}%`;
+
+    // Boss
+    gameSetting.bossLevel = false;
+
+    gameSetting.activeFieldsCount++;
+    gameSetting.time += Math.ceil(gameSetting.time / 5) * 2;
 }
 
 
@@ -485,7 +581,6 @@ function changeCursor(){
 
 
 // WELCOME SECTION - SLIDESHOW
-const welcome = document.querySelector('.welcome');
 const welcomeContainers = document.querySelectorAll('.welcomeContainer');
 const welcomeNextBtns = document.querySelectorAll('.welcomeNextBtn');
 const welcomeNameInput = document.querySelector('.welcomeNameInput');
@@ -511,8 +606,10 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
 
         // Last slide
         else if(welcomeContainers[index].classList.contains('welcomeEndSlideshow')){
-            // localstorage save that slideshow was done (gamesetting.slideshow)
-            console.log("last");
+            console.log("last slide");
+
+            gameSetting.welcomeSlideshow = true;
+            localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
 
             welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
             setTimeout(() => {
@@ -521,9 +618,19 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
         }
 
         else{
-            console.log("none");
             welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
             welcomeContainers[index + 1].style.animation = "welcomeSlideIn 200ms ease-in-out forwards";
         }
     })
+})
+
+const welcomeBackBtn = document.querySelector('.welcomeBackBtn');
+const welcomeBack = document.querySelector('.welcomeBack');
+
+welcomeBackBtn.addEventListener('click', () => {
+    welcomeBack.style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
+
+    setTimeout(() => {
+        welcome.style.display = "none";
+    }, 200);
 })

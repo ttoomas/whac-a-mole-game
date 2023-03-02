@@ -312,6 +312,23 @@ body.gameActive .start{
     display: grid;
     overflow: hidden;
 }
+
+.welcomeBack, .welcomeInitial{
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 100;
+}
+
+.welcome.initialActive .welcomeInitial{
+    display: grid;
+}
+.welcome.backActive .welcomeBack{
+    display: flex;
+}
+
 .welcomeContainer{
     grid-column: 1;
     grid-row: 1;
@@ -321,13 +338,14 @@ body.gameActive .start{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: black;
     color: white;
     padding-inline: 100px;
     padding-block: 94px 114px;
-    z-index: 100;
+    transform: translateX(100%);
+    background-color: black;
 }
 .welcome .welcomeContainer:nth-of-type(1){
+    transform: translateX(0);
     z-index: 110;
 }
 .welcome .welcomeContainer:nth-of-type(2){
@@ -411,6 +429,29 @@ body.gameActive .start{
     height: 350px;
 }
 
+.welcomeBack{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+}
+.welcomeBackTitle{
+    font-size: 70px;
+    text-align: center;
+}
+.welcomeBackBtn{
+    background-color: black;
+    border: 2px solid white;
+    outline: none;
+    color: white;
+    padding: 10px 28px;
+    font-size: 32px;
+    font-weight: 600;
+    border-radius: 13px;
+    margin-top: 50px;
+}
+
 @keyframes welcomeSlideIn {
     0%{
         transform: translateX(100%);
@@ -427,4 +468,15 @@ body.gameActive .start{
     100%{
         transform: translateX(-100%);
     }
+}
+
+/* Preload Cover */
+.preloadCover{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    z-index: 999;
 }
