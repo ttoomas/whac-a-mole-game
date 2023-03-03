@@ -8,12 +8,20 @@ const progressBar = document.querySelector('.progress__bar.progressGreen');
 const reachLvlText = document.querySelector('.reach__lvlText');
 const reachPtsText = document.querySelector('.reach__ptsText');
 
-const startGameBtn = document.querySelector('.start__btn');
+const startGameBtn = document.querySelector('.battle__btn');
 const hammerCursor = document.querySelector('.cursor__hammerBx');
 const circleCursorInner = document.querySelector('.circle__inner');
 const circleCursorOuter = document.querySelector('.circle__outer');
 const activeCircles = document.querySelectorAll('.circleCursor');
 const gameCursors = document.querySelector('.game__cursors');
+
+const levelStatText = document.querySelector('.stat__text.levelText');
+const timeStatText = document.querySelector('.stat__text.timeText');
+const nextLvlPtsStatText = document.querySelector('.stat__text.nextLvlPtsText');
+const currPtsStatText = document.querySelector('.stat__text.currPtsText');
+const allTimePtsStatText = document.querySelector('.stat__text.allTimePtsText');
+const xpCountText = document.querySelector('.stat__text.xpCountText');
+const bossLevelsStatText = document.querySelector('.stat__text.bossLevelsText');
 
 const welcome = document.querySelector('.welcome');
 const welcomeBackName = document.querySelector('.welcomeBackName');
@@ -93,6 +101,8 @@ let gameSetting = {
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
+    xp: 0,
+    bossLevelsCount: 0,
     playerName: null,
     welcomeSlideshow: false
 }
@@ -103,6 +113,8 @@ let currentProgress = 0;
 
 
 // Onload get game settings
+let isSettingLoaded = false;
+
 function onLoadGameSetting(){
     let loadedGameSetting = JSON.parse(localStorage.getItem('moleGameSetting'));
 
@@ -115,6 +127,9 @@ function onLoadGameSetting(){
         welcomeBackName.innerText = loadedGameSetting.playerName;
 
         gameSetting = loadedGameSetting;
+        isSettingLoaded = true;
+
+        updateStatsText();
 
         // Set points and progress bar
         ptsText.innerText = gameSetting.points;
@@ -427,18 +442,19 @@ startGameBtn.addEventListener('click', () => {
 
 function startGame(){
     document.body.classList.add('gameActive');
+    document.body.classList.remove('activeHome');
 
     if(gameSetting.bossLevel){
         // Boss level
 
         game.classList.add('bossLevel');
 
-        for (let i = 0; i < 8; i++) {
-            let minTime = randomNumber(100, 800);
+        for (let i = 0; i < 5; i++) {
+            let minTime = randomNumber(100, 1000);
             let maxTime;
 
             do {
-                maxTime = randomNumber(400, 1500);
+                maxTime = randomNumber(500, 1500);
             } while (maxTime <= (minTime + 150))
 
             console.log(minTime, maxTime);
@@ -487,8 +503,10 @@ function endGame(){
     fieldsArr = [];
 
     resetGameVar();
+    updateStatsText();
 
     document.body.classList.remove('gameActive');
+    document.body.classList.add('activeHome');
 }
 
 function resetGameVar(){
@@ -499,6 +517,16 @@ function resetGameVar(){
     timeText.innerText = currentTime    
     
     localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+}
+
+function updateStatsText(){
+    levelStatText.innerText = gameSetting.currentLvl;
+    timeStatText.innerText = gameSetting.time;
+    nextLvlPtsStatText.innerText = gameSetting.nextLvlPts;
+    currPtsStatText.innerText = gameSetting.points;
+    allTimePtsStatText.innerText = gameSetting.allTimePoints;
+    xpCountText.innerText = gameSetting.xp;
+    bossLevelsStatText.innerText = gameSetting.bossLevelsCount;
 }
 
 // LVL
@@ -544,6 +572,7 @@ function bossLevelUp(){
 
     // Boss
     gameSetting.bossLevel = false;
+    gameSetting.bossLevelsCount++;
 
     gameSetting.activeFieldsCount++;
     gameSetting.time += Math.ceil(gameSetting.time / 5) * 2;
@@ -628,7 +657,10 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
             console.log("last slide");
 
             gameSetting.welcomeSlideshow = true;
-            localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+
+            if(!isSettingLoaded){
+                localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+            }
 
             welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
             setTimeout(() => {
@@ -652,4 +684,29 @@ welcomeBackBtn.addEventListener('click', () => {
     setTimeout(() => {
         welcome.style.display = "none";
     }, 200);
+})
+
+
+// HUNTER Shop
+const homeShopBtn = document.querySelector('.shop__btn');
+const shopLeaveBtn = document.querySelector('.shop__leave');
+
+homeShopBtn.addEventListener('click', () => {
+    document.body.classList.add('activeShop');
+    document.body.classList.remove('activeHome');
+})
+
+shopLeaveBtn.addEventListener('click', () => {
+    document.body.classList.remove('activeShop');
+    document.body.classList.add('activeHome');
+})
+
+// HELP Icon
+const helpIcon = document.querySelector('.help__icon');
+
+helpIcon.addEventListener('click', () => {
+    welcome.style.display = "grid";
+    document.body.classList.add('helpActive');
+
+    welcome.classList.add('initialActive');
 })

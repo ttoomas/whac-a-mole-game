@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="./res/css/style.css">
 </head>
-<body>
+<body class="activeHome">
 
     <!-- new home section - start btn, your lvl, xp to next lvl-->
     <!-- welcome section - introduce game mechanics, animals and their points, level system -->
@@ -78,31 +78,31 @@
 
         <div class="home__stats">
             <div class="stat__level">
-                <p class="stat__text levelText">5</p>
+                <p class="stat__text levelText">1</p>
                 <p class="stat__name">level</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text timeText">5</p>
+                <p class="stat__text timeText">10</p>
                 <p class="stat__name">level time</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text nextLvlPts">45</p>
+                <p class="stat__text nextLvlPtsText">25</p>
                 <p class="stat__name">next level points</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text currPts">24</p>
+                <p class="stat__text currPtsText">0</p>
                 <p class="stat__name">points</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text allTimePts">20000000</p>
+                <p class="stat__text allTimePtsText">0</p>
                 <p class="stat__name">all-time points</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text allTimePts">15</p>
+                <p class="stat__text xpCountText">0</p>
                 <p class="stat__name">xp</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text allTimePts">2</p>
+                <p class="stat__text bossLevelsText">0</p>
                 <p class="stat__name">boss levels</p>
             </div>
         </div>
@@ -136,6 +136,7 @@
                 XP
             </p>
         </div>
+        </div>
 
         <div class="shop__hunterContainer">
             <div class="shop__hunter hunterRed">
@@ -149,7 +150,7 @@
                         <p class="hunter__abil">-10 lskdfj</p>
                         <p class="hunter__cost">250 xp</p>
                     </div>
-                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                    <button class="hunter__btn">Buy Edd</button> <!-- buy/choose/selected -->
                 </div>
             </div>
             <div class="shop__hunter hunterGreen">
@@ -198,7 +199,7 @@
     </section>
 
 
-    <section class="welcome" style="display: none;">
+    <section class="welcome">
         <div class="welcomeBack">
             <h1 class="welcomeBackTitle">
                 Welcome back
@@ -316,7 +317,7 @@
     </section>
 
 
-    <script src="./res/js/main.js"></script>
+    <script src="./res/js/main.js" type="module"></script>
     
 </body>
 </html>
