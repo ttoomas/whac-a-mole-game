@@ -17,6 +17,7 @@ body{
     box-sizing: border-box;
     font-family: 'Caveat', cursive;
     position: relative;
+    background-color: black;
 }
 p, h1, h2, h3, h4, h5, h6{
     margin: 0;
@@ -161,33 +162,6 @@ p, h1, h2, h3, h4, h5, h6{
     margin-top: 30px;
 }
 
-
-/* START SECTION */
-.start{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-    z-index: 10;
-}
-.start__btn{
-    font-size: 40px;
-    border: black;
-    padding: 18px 50px;
-    font-weight: 600;
-}
-
-/* Game Active class */
-body.gameActive .start{
-    display: none;
-}
-
 /* Cursors */
 /* .cursors{
     display: flex;
@@ -272,6 +246,10 @@ body.gameActive .start{
 .circle__inner.circleHoverActive{
     width: 56px;
     height: 56px;
+}
+.circle__inner.circleHoverActive.circleSmall{
+    width: 30px;
+    height: 30px;
 }
 .circle__inner.circleHoverActive ~ .circle__outer{
     opacity: 0;
@@ -479,4 +457,291 @@ body.gameActive .start{
     height: 100vh;
     background-color: black;
     z-index: 999;
+}
+
+/* Home Section */
+.home{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: black;
+    color: white;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 68px 36px 68px;
+
+    display: none;
+}
+.home__setting{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    column-gap: 24px;
+}
+.setting__name{
+    font-size: 34px;
+}
+.setting__icon{
+    width: 52px;
+    transition: transform 200ms ease-in-out;
+}
+.setting__icon:hover{
+    transform: rotate(180deg) scale(1.1);
+}
+.home__shop{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 14px;
+    margin-top: 16px;
+}
+.shop__hunterBx{
+    display: flex;
+    position: relative;
+}
+.shopHunter__name{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.66);
+    font-size: 28px;
+    padding: 9px 20px;
+    border-radius: 11px;
+}
+.shopHunter__img{
+    width: 260px;
+}
+.shop__btnBx{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 16px;
+}
+.homeShop__text{
+    font-size: 34px;
+}
+.shop__btn{
+    outline: none;
+    background-color: white;
+    color: black;
+    font-size: 28px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 10px;
+    border: 2px solid black;
+    transition: border-color 225ms ease-in-out, background-color 225ms ease-in-out, color 225ms ease-in-out;
+}
+.shop__btn:hover{
+    border-color: white;
+    background-color: black;
+    color: white;
+}
+.home__stats{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 40px;
+    margin-top: 78px;
+}
+.stat__level{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+    border-radius: 12px;
+    padding: 10px 36px;
+}
+.stat__text{
+    font-size: 28px;
+}
+.stat__name{
+    font-size: 20px;
+    text-transform: capitalize;
+    border-top: 1px dashed white;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+.home__battle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 68px;
+}
+.battle__btn{
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+    border-radius: 12px;
+    font-size: 36px;
+    padding: 13px 32px;
+    transition: border-color 225ms ease-in-out, background-color 225ms ease-in-out, color 225ms ease-in-out;
+}
+.battle__btn:hover{
+    border-color: white;
+    background-color: black;
+    color: white;   
+}
+.home__help{
+    margin-top: auto;
+}
+.help__icon{
+    width: 62px;
+    transition: transform 200ms ease-in-out;
+}
+.help__icon:hover{
+    transform: rotate(360deg) scale(1.15);
+}
+
+
+
+/* SHOP Section */
+.shop{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+    z-index: 200;
+    padding: 48px 60px;
+}
+.shop__menu{
+    display: flex;
+}
+.shop__leave{
+    width: 44px;
+    transition: transform 200ms ease-in-out;
+}
+.shop__leave:hover{
+    transform: rotate(8deg) scale(1.15);
+}
+.shop__text{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.shop__title{
+    font-size: 60px;
+}
+.shop__desc{
+    font-size: 29px;
+    max-width: 1040px;
+    margin-top: 20px;
+    text-align: center;
+}
+.shop__res{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+.res__text{
+    font-size: 28px;
+}
+.res__xp{
+    text-decoration: underline wavy white 2px;
+    text-underline-offset: 8px;
+}
+.shop__hunterContainer{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 64px 40px;
+    margin-top: 38px;
+    max-width: 1500px;
+    margin-inline: auto;
+}
+.shop__hunter{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 38px;
+}
+.hunter__imageBx{
+    display: flex;
+}
+.hunter__image{
+    width: 250px;
+    object-fit: contain;
+}
+.hunter__info{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+.hunter__name{
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+.hunter__desc{
+    font-size: 23px;
+    line-height: 1.1;
+}
+.hunter__infoBx{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 26px;
+}
+.hunter__abil{
+    position: relative;
+    margin-right: 22px;
+    padding-right: 10px;
+}
+.hunter__abil::before{
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 65%;
+    background-color: white;
+}
+.hunter__cost{
+    text-transform: uppercase;
+}
+.hunter__btn{
+    border: 2px solid white;
+    background-color: black;
+    color: white;
+    border-radius: 12px;
+    font-size: 26px;
+    padding: 10px 26px;
+    margin-top: 15px;
+    transition: background-color 225ms ease-in-out, color 225ms ease-in-out, border-color 225ms ease-in-out;
+}
+.hunter__btn:hover{
+    background-color: white !important;
+    color: black !important;
+    border-color: white !important;
+}
+
+.shop__hunter.hunterRed .hunter__cost{
+    color: #ff4747;
+}
+.shop__hunter.hunterRed .hunter__btn{
+    border-color: #ff4747;
+    color: #ff4747;
+}
+.shop__hunter.hunterGreen .hunter__cost{
+    color: #51d951;
+}
+.shop__hunter.hunterGreen .hunter__btn{
+    border-color: #51d951;
+    color: #51d951;
 }

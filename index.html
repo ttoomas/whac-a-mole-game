@@ -59,12 +59,146 @@
     </main>
 
 
-    <section class="start">
-        <button class="start__btn circleCursor">Start</button>
+    <section class="home">
+        <div class="home__setting">
+            <h3 class="setting__name">ttoomas</h3>
+            <img src="./res/images/settingIcon.png" alt="" class="setting__icon circleCursor smallCursor" draggable="false">
+        </div>
+
+        <div class="home__shop">
+            <div class="shop__hunterBx">
+                <p class="shopHunter__name">Edd</p>
+                <img src="./res/images/animal1.png" alt="" class="shopHunter__img" draggable="false">
+            </div>
+            <div class="shop__btnBx">
+                <h3 class="homeShop__text">Change hunter character</h3>
+                <button class="shop__btn circleCursor smallCursor">Hunter Shop</button>
+            </div>
+        </div>
+
+        <div class="home__stats">
+            <div class="stat__level">
+                <p class="stat__text levelText">5</p>
+                <p class="stat__name">level</p>
+            </div>
+            <div class="stat__level">
+                <p class="stat__text timeText">5</p>
+                <p class="stat__name">level time</p>
+            </div>
+            <div class="stat__level">
+                <p class="stat__text nextLvlPts">45</p>
+                <p class="stat__name">next level points</p>
+            </div>
+            <div class="stat__level">
+                <p class="stat__text currPts">24</p>
+                <p class="stat__name">points</p>
+            </div>
+            <div class="stat__level">
+                <p class="stat__text allTimePts">20000000</p>
+                <p class="stat__name">all-time points</p>
+            </div>
+            <div class="stat__level">
+                <p class="stat__text allTimePts">15</p>
+                <p class="stat__name">xp</p>
+            </div>
+            <div class="stat__level">
+                <p class="stat__text allTimePts">2</p>
+                <p class="stat__name">boss levels</p>
+            </div>
+        </div>
+            
+        <div class="home__battle">
+            <div class="battle__btnBx">
+                <button class="battle__btn circleCursor">Go Battle</button>
+            </div>
+        </div>
+
+        <div class="home__help">
+            <img src="./res/images/questionIcon.png" alt="" draggable="false" class="help__icon circleCursor smallCursor">
+        </div>
     </section>
 
 
-    <section class="welcome">
+    <section class="shop">
+        <div class="shop__menu">
+            <img src="./res/images/leaveIcon.png" alt="" class="shop__leave circleCursor smallCursor" draggable="false">
+        </div>
+        
+        <div class="shop__text">
+            <h1 class="shop__title">Hunter Shop</h1>
+            <p class="shop__desc">In the hunter shop, players can use their XP to purchase powerful Viking hunters like Thorvald, Bjorn, Olaf, and Sven to aid them in their battle against the pesky animals.</p>
+        </div>
+
+        <div class="shop__res">
+            <p class="res__text">
+                You have
+                <span class="res__xp">250</span>
+                XP
+            </p>
+        </div>
+
+        <div class="shop__hunterContainer">
+            <div class="shop__hunter hunterRed">
+                <div class="hunter__imageBx">
+                    <img src="./res/images/hunter1.png" alt="" class="hunter__image" draggable="false">
+                </div>
+                <div class="hunter__info">
+                    <h2 class="hunter__name">Thorvald the Hammerer</h2>
+                    <p class="hunter__desc">Thorvald the Hammerer is a fierce Viking warrior with a powerful hammer, dedicated to protecting his home and loved ones in the game.</p>
+                    <div class="hunter__infoBx">
+                        <p class="hunter__abil">-10 lskdfj</p>
+                        <p class="hunter__cost">250 xp</p>
+                    </div>
+                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                </div>
+            </div>
+            <div class="shop__hunter hunterGreen">
+                <div class="hunter__imageBx">
+                    <img src="./res/images/hunter2.png" alt="" class="hunter__image" draggable="false">
+                </div>
+                <div class="hunter__info">
+                    <h2 class="hunter__name">Bjorn the Crusher</h2>
+                    <p class="hunter__desc">Bjorn the Crusher, is a fierce Viking warrior with unmatched strength who is feared by all animals who dare to challenge him in the game.</p>
+                    <div class="hunter__infoBx">
+                        <p class="hunter__abil">-10 lskdfj</p>
+                        <p class="hunter__cost">250 xp</p>
+                    </div>
+                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                </div>
+            </div>
+            <div class="shop__hunter">
+                <div class="hunter__imageBx">
+                    <img src="./res/images/hunter3.png" alt="" class="hunter__image" draggable="false">
+                </div>
+                <div class="hunter__info">
+                    <h2 class="hunter__name">Olaf the Smasher</h2>
+                    <p class="hunter__desc">Olaf the Smasher, is a Viking warrior known for his brute force and powerful hammer, making him a formidable opponent for any animal in the game.</p>
+                    <div class="hunter__infoBx">
+                        <p class="hunter__abil">-10 lskdfj</p>
+                        <p class="hunter__cost">Bought</p>
+                    </div>
+                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                </div>
+            </div>
+            <div class="shop__hunter">
+                <div class="hunter__imageBx">
+                    <img src="./res/images/hunter4.png" alt="" class="hunter__image" draggable="false">
+                </div>
+                <div class="hunter__info">
+                    <h2 class="hunter__name">Sven the Destroyer</h2>
+                    <p class="hunter__desc">Sven the Destroyer is a fierce Viking hunter with an unbreakable spirit and powerful hammer, dedicated to protecting his home and defeating all animals in the game.</p>
+                    <div class="hunter__infoBx">
+                        <p class="hunter__abil">-10 lskdfj</p>
+                        <p class="hunter__cost">250 xp</p>
+                    </div>
+                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="welcome" style="display: none;">
         <div class="welcomeBack">
             <h1 class="welcomeBackTitle">
                 Welcome back

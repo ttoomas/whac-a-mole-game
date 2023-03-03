@@ -71,6 +71,21 @@ let animalTypes = [
     }
 ];
 
+let huntersInfo = [
+    {
+        name: "Thorvald the Hammerer"
+    },
+    {
+        name: "Bjorn the Crusher"
+    },
+    {
+        name: "Olaf the Smasher"
+    },
+    {
+        name: "Sven the Destroyer"   
+    }
+]
+
 let gameSetting = {
     time: 10,
     currentLvl: 1,
@@ -374,10 +389,14 @@ class EventListener{
         activeCircles.forEach((circle) => {
             circle.addEventListener('mouseenter', () => {
                 circleCursorInner.classList.add('circleHoverActive');
+
+                if(circle.classList.contains('smallCursor')) circleCursorInner.classList.add('circleSmall');
             })
 
             circle.addEventListener('mouseleave', () => {
                 circleCursorInner.classList.remove('circleHoverActive');
+                
+                if(circle.classList.contains('smallCursor')) circleCursorInner.classList.remove('circleSmall');
             })
         })
     }
