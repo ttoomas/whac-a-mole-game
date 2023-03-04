@@ -10,7 +10,7 @@
 </head>
 <body class="activeHome disabledCursor">
 
-    <!-- new home section - start btn, your lvl, xp to next lvl-->
+    <!-- new home section - start btn, your lvl, coins to next lvl-->
     <!-- welcome section - introduce game mechanics, animals and their points, level system -->
     <!-- when game ends, show some game stats (how many of each animal you hit etc.) -->
 
@@ -98,8 +98,8 @@
                 <p class="stat__name">all-time points</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text xpCountText">0</p>
-                <p class="stat__name">xp</p>
+                <p class="stat__text coinCountText">0</p>
+                <p class="stat__name">coins</p>
             </div>
             <div class="stat__level">
                 <p class="stat__text bossLevelsText">0</p>
@@ -126,45 +126,45 @@
         
         <div class="shop__text">
             <h1 class="shop__title">Hunter Shop</h1>
-            <p class="shop__desc">In the hunter shop, players can use their XP to purchase powerful Viking hunters like Thorvald, Bjorn, Olaf, and Sven to aid them in their battle against the pesky animals.</p>
+            <p class="shop__desc">In the hunter shop, players can use their Coins to purchase powerful Viking with special abilities</p>
         </div>
 
         <div class="shop__res">
             <p class="res__text">
                 You have
-                <span class="res__xp">250</span>
-                XP
+                <span class="res__coin">250</span>
+                Coins
             </p>
         </div>
         </div>
 
         <div class="shop__hunterContainer">
-            <div class="shop__hunter hunterRed">
+            <!-- abilites - plus time, less coins for 4th animal, more coins for each animal -->
+            <div class="shop__hunter">
                 <div class="hunter__imageBx">
                     <img src="./res/images/hunter1.png" alt="" class="hunter__image" draggable="false">
                 </div>
                 <div class="hunter__info">
                     <h2 class="hunter__name">Thorvald the Hammerer</h2>
-                    <p class="hunter__desc">Thorvald the Hammerer is a fierce Viking warrior with a powerful hammer, dedicated to protecting his home and loved ones in the game.</p>
+                    <p class="hunter__desc">Thorvald is a Viking warrior with a powerful hammer, dedicated to protecting his home in the game.</p>
                     <div class="hunter__infoBx">
-                        <p class="hunter__abil">-10 lskdfj</p>
-                        <p class="hunter__cost">250 xp</p>
+                        <p class="hunter__cost">...</p>
                     </div>
-                    <button class="hunter__btn">Buy Edd</button> <!-- buy/choose/selected -->
+                    <button class="hunter__btn circleCursor smallCursor">...</button> <!-- buy/choose/selected -->
                 </div>
             </div>
-            <div class="shop__hunter hunterGreen">
+            <div class="shop__hunter">
                 <div class="hunter__imageBx">
                     <img src="./res/images/hunter2.png" alt="" class="hunter__image" draggable="false">
                 </div>
                 <div class="hunter__info">
                     <h2 class="hunter__name">Bjorn the Crusher</h2>
-                    <p class="hunter__desc">Bjorn the Crusher, is a fierce Viking warrior with unmatched strength who is feared by all animals who dare to challenge him in the game.</p>
+                    <p class="hunter__desc">Bjorn is a fierce Viking warrior with unmatched strength who is feared by all animals in the game.</p>
                     <div class="hunter__infoBx">
-                        <p class="hunter__abil">-10 lskdfj</p>
-                        <p class="hunter__cost">250 xp</p>
+                        <p class="hunter__abil">+5s in level</p>
+                        <p class="hunter__cost">...</p>
                     </div>
-                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                    <button class="hunter__btn circleCursor smallCursor">...</button> <!-- buy/choose/selected -->
                 </div>
             </div>
             <div class="shop__hunter">
@@ -173,12 +173,12 @@
                 </div>
                 <div class="hunter__info">
                     <h2 class="hunter__name">Olaf the Smasher</h2>
-                    <p class="hunter__desc">Olaf the Smasher, is a Viking warrior known for his brute force and powerful hammer, making him a formidable opponent for any animal in the game.</p>
+                    <p class="hunter__desc">Olaf is a Viking warrior known for his brute force and powerful hammer, making him a formidable opponent for any animal.</p>
                     <div class="hunter__infoBx">
-                        <p class="hunter__abil">-10 lskdfj</p>
-                        <p class="hunter__cost">Bought</p>
+                        <p class="hunter__abil">Hrafnblod deduct 10 points</p>
+                        <p class="hunter__cost">..</p>
                     </div>
-                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                    <button class="hunter__btn circleCursor smallCursor">...</button> <!-- buy/choose/selected -->
                 </div>
             </div>
             <div class="shop__hunter">
@@ -187,12 +187,12 @@
                 </div>
                 <div class="hunter__info">
                     <h2 class="hunter__name">Sven the Destroyer</h2>
-                    <p class="hunter__desc">Sven the Destroyer is a fierce Viking hunter with an unbreakable spirit and powerful hammer, dedicated to protecting his home and defeating all animals in the game.</p>
+                    <p class="hunter__desc">Sven is a fierce Viking hunter with an unbreakable spirit and powerful hammer, dedicated defeating all animals in the game.</p>
                     <div class="hunter__infoBx">
-                        <p class="hunter__abil">-10 lskdfj</p>
-                        <p class="hunter__cost">250 xp</p>
+                        <p class="hunter__abil">Special points per animal</p>
+                        <p class="hunter__cost">...</p>
                     </div>
-                    <button class="hunter__btn circleCursor smallCursor">Buy Edd</button> <!-- buy/choose/selected -->
+                    <button class="hunter__btn circleCursor smallCursor">...</button> <!-- buy/choose/selected -->
                 </div>
             </div>
         </div>
@@ -294,7 +294,7 @@
              </div>
     
              <div class="welcomeContainer welcomeAnimalBx">
-                <h1 class="welcomeTitle">Name 1</h1>
+                <h1 class="welcomeTitle">Fenrisulf</h1>
                 
                 <div class="welcomeInfo">
                     <img src="./res/images/animal1.png" alt="" class="welcomeAnimalImg" draggable="false">
@@ -305,7 +305,7 @@
              </div>         
     
              <div class="welcomeContainer welcomeAnimalBx">
-                <h1 class="welcomeTitle">Name 2</h1>
+                <h1 class="welcomeTitle">Jormungand</h1>
                 
                 <div class="welcomeInfo">
                     <img src="./res/images/animal2.png" alt="" class="welcomeAnimalImg" draggable="false">
@@ -316,7 +316,7 @@
              </div>
     
              <div class="welcomeContainer welcomeAnimalBx">
-                <h1 class="welcomeTitle">Name 3</h1>
+                <h1 class="welcomeTitle">Sleipnir</h1>
                 
                 <div class="welcomeInfo">
                     <img src="./res/images/animal3.png" alt="" class="welcomeAnimalImg" draggable="false">
@@ -327,10 +327,21 @@
              </div>
     
              <div class="welcomeContainer welcomeAnimalBx">
-                <h1 class="welcomeTitle">Name 4</h1>
+                <h1 class="welcomeTitle">Hrafnblod</h1>
                 
                 <div class="welcomeInfo">
                     <img src="./res/images/animal4.png" alt="" class="welcomeAnimalImg" draggable="false">
+                    <h2 class="welcomeDesc">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus beatae neque blanditiis quos veniam maiores?</h2>
+                </div>
+    
+                <button class="welcomeNextBtn circleCursor">Go Next</button>
+             </div>
+             
+             <div class="welcomeContainer welcomeAnimalBx">
+                <h1 class="welcomeTitle">Leif the Lucky</h1>
+                
+                <div class="welcomeInfo">
+                    <img src="./res/images/animal5.png" alt="" class="welcomeAnimalImg" draggable="false">
                     <h2 class="welcomeDesc">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatibus beatae neque blanditiis quos veniam maiores?</h2>
                 </div>
     

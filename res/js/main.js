@@ -13,7 +13,7 @@ const hammerCursor = document.querySelector('.cursor__hammerBx');
 const circleCursor = document.querySelector('.cursor__circleBx');
 const circleCursorInner = document.querySelector('.circle__inner');
 const circleCursorOuter = document.querySelector('.circle__outer');
-const activeCircles = document.querySelectorAll('.circleCursor');
+let activeCircles = document.querySelectorAll('.circleCursor');
 const gameCursors = document.querySelector('.game__cursors');
 
 const levelStatText = document.querySelector('.stat__text.levelText');
@@ -21,7 +21,8 @@ const timeStatText = document.querySelector('.stat__text.timeText');
 const nextLvlPtsStatText = document.querySelector('.stat__text.nextLvlPtsText');
 const currPtsStatText = document.querySelector('.stat__text.currPtsText');
 const allTimePtsStatText = document.querySelector('.stat__text.allTimePtsText');
-const xpCountText = document.querySelector('.stat__text.xpCountText');
+const coinCountText = document.querySelector('.stat__text.coinCountText');
+const shopCoinCountText = document.querySelector('.res__coin');
 const bossLevelsStatText = document.querySelector('.stat__text.bossLevelsText');
 
 const renameInput = document.querySelector('.rename__input');
@@ -33,6 +34,14 @@ const settingNameText = document.querySelector('.setting__nameText');
 const welcome = document.querySelector('.welcome');
 const welcomeBackName = document.querySelector('.welcomeBackName');
 const preloadCover = document.querySelector('.preloadCover');
+const homeShop = document.querySelector('.home__shop');
+
+const shop = document.querySelector('.shop');
+const homeHunterName = document.querySelector('.shopHunter__name');
+const homeHunterImg = document.querySelector('.shopHunter__img');
+const shopHunters = document.querySelectorAll('.shop__hunter');
+const shopHunterCosts = document.querySelectorAll('.hunter__cost');
+const shopHunterBtns = document.querySelectorAll('.hunter__btn');
 
 let mousePos = {
     x: 0,
@@ -66,38 +75,51 @@ let fieldsCount = 9;
 let animalTypes = [
     {
         id: 1,
-        pointValue: 10
+        pointValue: 10,
+        coinValue: 1
     },
     {
         id: 2,
-        pointValue: 7
+        pointValue: 7,
+        coinValue: 0
     },
     {
         id: 3,
-        pointValue: 1
+        pointValue: 1,
+        coinValue: 0
     },
     {
         id: 4,
-        pointValue: -20
+        pointValue: -20,
+        coinValue: 0
     },
     {
         id: 5,
-        pointValue: 5
+        pointValue: 0,
+        coinValue: 5
     }
 ];
 
 let huntersInfo = [
     {
-        name: "Thorvald the Hammerer"
+        id: 1,
+        name: "Thorvald the Hammerer",
+        coinsValue: 0
     },
     {
-        name: "Bjorn the Crusher"
+        id: 2,
+        name: "Bjorn the Crusher",
+        coinsValue: 25
     },
     {
-        name: "Olaf the Smasher"
+        id: 3,
+        name: "Olaf the Smasher",
+        coinsValue: 50
     },
     {
-        name: "Sven the Destroyer"   
+        id: 4,
+        name: "Sven the Destroyer",
+        coinsValue: 100
     }
 ]
 
@@ -108,7 +130,9 @@ let gameSetting = {
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
-    xp: 0,
+    coins: 0,
+    ownHunters: [1, 2],
+    currentHunter: 1,
     bossLevelsCount: 0,
     playerName: null,
     welcomeSlideshow: false,
@@ -123,7 +147,9 @@ let initialGameSetting = {
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
-    xp: 0,
+    coins: 0,
+    ownHunters: [1],
+    currentHunter: 1,
     bossLevelsCount: 0,
     playerName: null,
     welcomeSlideshow: false,
@@ -188,6 +214,7 @@ function onLoadGameSetting(){
         }
     }
 
+    updateHunters();
     preloadCover.style.display = "none";
 }
 
@@ -321,6 +348,7 @@ class EventListener{
 
             gameSetting.points += animalStats.pointValue;
             gameSetting.allTimePoints += animalStats.pointValue;
+            gameSetting.coins += animalStats.coinValue;
             currentProgress += (currentProgressStep * animalStats.pointValue);
 
             gameFieldAnimal.style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
@@ -333,10 +361,8 @@ class EventListener{
 
     getMousePos(){
         window.addEventListener('mousemove', (e) => {
-            mousePos.x = e.clientX;
-            mousePos.y = e.clientY;
-
-            // console.log(e.target.className.includes("circleCursor"));
+            mousePos.x = e.pageX;
+            mousePos.y = e.pageY;
 
             this.hammerMove();
             this.circleMove();
@@ -510,7 +536,13 @@ function startGame(){
             fieldsArr.push(new Field(minTime, maxTime));
         }
 
-        currentTime = 10;
+        if(gameSetting.currentHunter === 2){
+            currentTime = 15;
+        }
+        else{
+            currentTime = 10;
+        }
+
         timeText.innerText = currentTime;
     }
     
@@ -524,8 +556,13 @@ function startGame(){
         for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
             fieldsArr.push(new Field(500, 600));
         }
-    
+
         currentTime = gameSetting.time;
+
+        if(gameSetting.currentHunter === 2){
+            currentTime += 5;
+        }
+
         timeText.innerText = currentTime;
     }
 
@@ -552,6 +589,7 @@ function endGame(){
 
     resetGameVar();
     updateStatsText();
+    updateHunters();
 
     document.body.classList.remove('gameActive');
     document.body.classList.add('activeHome');
@@ -573,12 +611,14 @@ function updateStatsText(){
     nextLvlPtsStatText.innerText = gameSetting.nextLvlPts;
     currPtsStatText.innerText = gameSetting.points;
     allTimePtsStatText.innerText = gameSetting.allTimePoints;
-    xpCountText.innerText = gameSetting.xp;
     bossLevelsStatText.innerText = gameSetting.bossLevelsCount;
-
+    
     homeNameText.innerText = gameSetting.playerName;
     settingNameText.innerText = gameSetting.playerName;
     renameInput.value = gameSetting.playerName;
+
+    coinCountText.innerText = gameSetting.coins;
+    shopCoinCountText.innerText = gameSetting.coins;
 }
 
 // LVL
@@ -756,11 +796,21 @@ const shopLeaveBtn = document.querySelector('.shop__leave');
 homeShopBtn.addEventListener('click', () => {
     document.body.classList.add('activeShop');
     document.body.classList.remove('activeHome');
+
+    screenSize = {
+        width: shop.clientWidth,
+        height: shop.clientHeight
+    };
 })
 
 shopLeaveBtn.addEventListener('click', () => {
     document.body.classList.remove('activeShop');
     document.body.classList.add('activeHome');
+
+    screenSize = {
+        width: document.body.clientWidth,
+        height: document.body.clientHeight 
+    };
 })
 
 // HELP Icon
@@ -909,4 +959,114 @@ confirmResetBtn.addEventListener('click', () => {
 
     welcome.style.display = "grid";
     welcome.classList.add('initialActive');
+})
+
+
+// Helper - Update hunters (current, shop btns)
+function updateHunters(){
+    homeHunterName.innerText = huntersInfo[gameSetting.currentHunter - 1].name;
+    homeHunterImg.src = `./res/images/hunter${huntersInfo[gameSetting.currentHunter - 1].id}.png`;
+    homeShop.className = 'home__shop';
+    homeShop.classList.add(`hunterID${gameSetting.currentHunter}`);
+
+    shopHunters.forEach((hunter, index) => {
+        shopHunterBtns[index].classList.remove('hunterSelected');
+        hunter.classList.remove('hunterChoose');
+
+        shopHunterCosts[index].innerText = `${huntersInfo[index].coinsValue} Coins`;
+
+        if(gameSetting.ownHunters.includes(huntersInfo[index].id)){
+            // Owns it
+            hunter.classList.remove('hunterGreen');
+            hunter.classList.remove('hunterRed');
+            
+            if(gameSetting.currentHunter === huntersInfo[index].id){
+                // Selected
+                shopHunterBtns[index].innerText = "Selected";
+                shopHunterBtns[index].setAttribute('data-shop-btn-status', 1);
+
+                shopHunterBtns[index].classList.add('hunterSelected');
+                shopHunterBtns[index].classList.remove('circleCursor');
+            }
+            else{
+                // Can select
+                shopHunterBtns[index].innerText = "Select";
+                shopHunterBtns[index].setAttribute('data-shop-btn-status', 2);
+
+                hunter.classList.add('hunterChoose');
+
+                shopHunterBtns[index].classList.add('circleCursor');
+            }
+        }
+        else if(gameSetting.coins >= huntersInfo[index].coinsValue){
+            // can buy
+            hunter.classList.add('hunterGreen');
+            hunter.classList.remove('hunterRed');
+
+            shopHunterBtns[index].innerText = "Buy";
+            shopHunterBtns[index].setAttribute('data-shop-btn-status', 3);
+
+            shopHunterBtns[index].classList.add('circleCursor');
+
+        }
+        else{
+            // can't buy
+            hunter.classList.remove('hunterGreen');
+            hunter.classList.add('hunterRed');
+
+            shopHunterBtns[index].innerText = "Buy";
+            shopHunterBtns[index].setAttribute('data-shop-btn-status', 4);
+
+            shopHunterBtns[index].classList.remove('circleCursor');
+        }
+    })
+
+    activeCircles = document.querySelectorAll('.circleCursor');
+
+    // Animals bonuses
+    animalTypes[0].pointValue = 10;
+    animalTypes[1].pointValue = 7;
+    animalTypes[2].pointValue = 1;
+    animalTypes[3].pointValue = -20;
+
+    if(gameSetting.currentHunter === 3){
+        animalTypes[3].pointValue = -10;
+    }
+    else if(gameSetting.currentHunter === 4){
+        animalTypes[0].pointValue = 15;
+        animalTypes[1].pointValue = 12;
+        animalTypes[2].pointValue = 3;
+    }
+}
+
+// Shop - buy hunters
+// Statuses - 1: selected; 2: can select; 3: can buy; 4: can't buy;
+shopHunterBtns.forEach((hunterBtn, index) => {
+    hunterBtn.addEventListener('click', () => {
+        let btnStatus = parseInt(hunterBtn.getAttribute('data-shop-btn-status'));
+
+
+        // Select Hunter
+        if(btnStatus === 2 && gameSetting.ownHunters.includes(huntersInfo[index].id)){
+            gameSetting.currentHunter = huntersInfo[index].id;
+
+            updateHunters();
+
+            localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+        }
+
+        // Buy and select hunter
+        else if(btnStatus === 3 && gameSetting.coins >= huntersInfo[index].coinsValue){
+            gameSetting.coins -= huntersInfo[index].coinsValue;
+            gameSetting.ownHunters.push(huntersInfo[index].id);
+            gameSetting.currentHunter = huntersInfo[index].id;
+
+            coinCountText.innerText = gameSetting.coins;
+            shopCoinCountText.innerText = gameSetting.coins;
+
+            updateHunters();
+
+            localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+        }
+    })
 })

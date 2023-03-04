@@ -375,6 +375,9 @@ body.disabledCursor section *, body.disabledCursor{
 .welcome .welcomeContainer:nth-of-type(9){
     z-index: 102;
 }
+.welcome .welcomeContainer:nth-of-type(10){
+    z-index: 101;
+}
 
 
 body.helpActive .welcome .welcomeContainer:nth-of-type(1),
@@ -536,8 +539,8 @@ body.activeHome .home{
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    column-gap: 14px;
-    margin-top: 16px;
+    column-gap: 26px;
+    margin-top: 30px;
 }
 .shop__hunterBx{
     display: flex;
@@ -550,9 +553,24 @@ body.activeHome .home{
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.66);
     font-size: 28px;
-    padding: 9px 20px;
+    padding: 13px 18px;
     border-radius: 11px;
+    text-align: center;
 }
+
+.home__shop.hunterID1 .shopHunter__name{
+    transform: translate(-22%, -50%);
+}
+.home__shop.hunterID2 .shopHunter__name{
+    transform: translate(-25%, -9%);
+}
+.home__shop.hunterID3 .shopHunter__name{
+    transform: translate(-58%, -24%);
+}
+.home__shop.hunterID4 .shopHunter__name{
+    transform: translate(-44%, 18%);
+}
+
 .shopHunter__img{
     width: 260px;
 }
@@ -564,7 +582,7 @@ body.activeHome .home{
     row-gap: 16px;
 }
 .homeShop__text{
-    font-size: 34px;
+    font-size: 36px;
 }
 .shop__btn{
     outline: none;
@@ -588,7 +606,7 @@ body.activeHome .home{
     align-items: center;
     justify-content: center;
     column-gap: 40px;
-    margin-top: 78px;
+    margin-top: 94px;
 }
 .stat__level{
     display: flex;
@@ -649,7 +667,7 @@ body.activeHome .home{
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
     background-color: black;
     color: white;
     z-index: 180;
@@ -684,26 +702,26 @@ body.activeShop .shop{
 .shop__desc{
     font-size: 29px;
     max-width: 1040px;
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
 }
 .shop__res{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 26px;
 }
 .res__text{
     font-size: 28px;
 }
-.res__xp{
+.res__coin{
     text-decoration: underline wavy white 2px;
     text-underline-offset: 8px;
 }
 .shop__hunterContainer{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 64px 40px;
+    gap: 64px 58px;
     margin-top: 38px;
     max-width: 1500px;
     margin-inline: auto;
@@ -740,7 +758,7 @@ body.activeShop .shop{
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 16px;
     font-size: 26px;
 }
 .hunter__abil{
@@ -758,9 +776,6 @@ body.activeShop .shop{
     height: 65%;
     background-color: white;
 }
-.hunter__cost{
-    text-transform: uppercase;
-}
 .hunter__btn{
     border: 2px solid white;
     background-color: black;
@@ -771,11 +786,6 @@ body.activeShop .shop{
     margin-top: 15px;
     transition: background-color 225ms ease-in-out, color 225ms ease-in-out, border-color 225ms ease-in-out;
 }
-.hunter__btn:hover{
-    background-color: white !important;
-    color: black !important;
-    border-color: white !important;
-}
 
 .shop__hunter.hunterRed .hunter__cost{
     color: var(--red);
@@ -784,17 +794,25 @@ body.activeShop .shop{
     border-color: var(--red);
     color: var(--red);
 }
-.shop__hunter.hunterRed .hunter__btn:hover{
-    background-color: black !important;
-    border-color: var(--red) !important;
-    color: var(--red) !important;
-}
+
 .shop__hunter.hunterGreen .hunter__cost{
     color: var(--green);
 }
 .shop__hunter.hunterGreen .hunter__btn{
     border-color: var(--green);
     color: var(--green);
+}
+.shop__hunter.hunterGreen .hunter__btn:hover{
+    background-color: var(--green);
+    color: white;
+}
+
+.shop__hunter.hunterChoose .hunter__btn{
+    border-color: yellow;
+}
+.shop__hunter.hunterChoose .hunter__btn:hover{
+    background-color: yellow;
+    color: black;
 }
 
 
