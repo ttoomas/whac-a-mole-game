@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="./res/css/style.css">
 </head>
-<body class="activeHome">
+<body class="activeHome disabledCursor">
 
     <!-- new home section - start btn, your lvl, xp to next lvl-->
     <!-- welcome section - introduce game mechanics, animals and their points, level system -->
@@ -199,6 +199,60 @@
     </section>
 
 
+    <section class="setting">
+        <!-- normal cursor (circle) ; normal cursor (hammer) ; reset game (localstorage) ; rename -->
+        <div class="setting__menu">
+            <div class="setting__leave">
+                <img src="./res/images/leaveIcon.png" alt="" class="setting__leaveIcon circleCursor smallCursor">
+            </div>
+
+            <h1 class="setting__title">Game Setting</h1>
+        </div>
+
+        <div class="setting__container">
+            <div class="setting__bx setting__rename">
+                <p class="setting__text">
+                    Your current nickname is
+                    <span class="setting__nameText">ttoomas</span>
+                </p>
+                <button class="setting__btn settingRenameBtn circleCursor smallCursor">Rename</button>
+            </div>
+    
+            <div class="setting__bx setting__circleCursor">
+                <p class="setting__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita, exercitationem.</p>
+                <button class="setting__btn settingCircleBtn circleCursor smallCursor">Disable Circle Cursor</button>
+            </div>
+    
+            <div class="setting__bx setting__hammerCursor">
+                <p class="setting__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, accusamus.</p>
+                <button class="setting__btn settingHammerBtn circleCursor smallCursor">Disable Hammer Cursor</button>
+            </div>
+    
+            <div class="setting__bx setting__resetGame">
+                <p class="setting__text">If you reset the whole game, you will start from the beggining</p>
+                <button class="setting__btn settingResetBtn circleCursor smallCursor">Reset Game</button>
+            </div>
+        </div>
+
+        <div class="setting__renameContainer">
+            <h2 class="rename__title">Rename</h2>
+            <input type="text" class="rename__input" value="ttoomas" spellcheck="false">
+            <div class="rename__btnBx">
+                <button class="rename__cancelBtn rename__btn circleCursor smallCursor">Cancel</button>
+                <button class="rename__confirmBtn rename__btn circleCursor smallCursor">Rename</button>
+            </div>
+        </div>
+
+        <div class="setting__resetContainer">
+            <h1 class="reset__title">Are you sure you want to reset your game progress?</h1>
+            <div class="reset__btnBx">
+                <button class="reset__cancelBtn reset__btn circleCursor smallCursor">Cancel</button>
+                <button class="reset__confirmBtn reset__btn circleCursor smallCursor">Reset</button>
+            </div>
+        </div>
+    </section>
+
+
     <section class="welcome">
         <div class="welcomeBack">
             <h1 class="welcomeBackTitle">
@@ -226,7 +280,7 @@
              <div class="welcomeContainer welcomeName">
                 <div class="welcomeTextBx">
                     <h1 class="welcomeTitle">Please enter your in-game nick</h1>
-                    <input type="text" name="welcomeNameInput" class="welcomeNameInput">
+                    <input type="text" name="welcomeNameInput" class="welcomeNameInput" spellcheck="false">
                 </div>
                 <button class="welcomeNextBtn circleCursor">Go Next</button>
              </div>
@@ -301,7 +355,7 @@
     </section>
 
     
-    <div class="preloadCover"></div>
+    <section class="preloadCover"></section>
 
 
     <!-- Cursors -->

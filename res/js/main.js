@@ -10,6 +10,7 @@ const reachPtsText = document.querySelector('.reach__ptsText');
 
 const startGameBtn = document.querySelector('.battle__btn');
 const hammerCursor = document.querySelector('.cursor__hammerBx');
+const circleCursor = document.querySelector('.cursor__circleBx');
 const circleCursorInner = document.querySelector('.circle__inner');
 const circleCursorOuter = document.querySelector('.circle__outer');
 const activeCircles = document.querySelectorAll('.circleCursor');
@@ -22,6 +23,12 @@ const currPtsStatText = document.querySelector('.stat__text.currPtsText');
 const allTimePtsStatText = document.querySelector('.stat__text.allTimePtsText');
 const xpCountText = document.querySelector('.stat__text.xpCountText');
 const bossLevelsStatText = document.querySelector('.stat__text.bossLevelsText');
+
+const renameInput = document.querySelector('.rename__input');
+const settingCircleBtn = document.querySelector('.settingCircleBtn');
+const settingHammerBtn = document.querySelector('.settingHammerBtn');
+const homeNameText = document.querySelector('.setting__name');
+const settingNameText = document.querySelector('.setting__nameText');
 
 const welcome = document.querySelector('.welcome');
 const welcomeBackName = document.querySelector('.welcomeBackName');
@@ -104,7 +111,24 @@ let gameSetting = {
     xp: 0,
     bossLevelsCount: 0,
     playerName: null,
-    welcomeSlideshow: false
+    welcomeSlideshow: false,
+    circleCursor: true,
+    hammerCursor: true
+}
+
+let initialGameSetting = {
+    time: 10,
+    currentLvl: 1,
+    nextLvlPts: 25,
+    activeFieldsCount: 1,
+    points: 0,
+    allTimePoints: 0,
+    xp: 0,
+    bossLevelsCount: 0,
+    playerName: null,
+    welcomeSlideshow: false,
+    circleCursor: true,
+    hammerCursor: true
 }
 
 let currentTime;
@@ -138,6 +162,30 @@ function onLoadGameSetting(){
         currentProgress = currentProgressStep * gameSetting.points;
 
         progressBar.style.width = `${currentProgress}%`;
+
+        // Update setting
+        if(!gameSetting.circleCursor){
+            // Disable circle cursor, change shop btn text
+            circleCursor.style.display = "none";
+
+            circleCursorInner.style.scale = 0;
+            circleCursorOuter.style.scale = 0;
+
+            document.body.classList.remove('disabledCursor');
+            settingCircleBtn.innerText = "Enable Circle Cursor";
+
+            setTimeout(() => {
+                circleCursor.style.display = "block";
+            }, 300);
+        }
+
+        if(!gameSetting.hammerCursor){
+            // Disable circle cursor, change shop btn text
+            game.style.cursor = "auto";
+            hammerCursor.style.display = "none";
+
+            settingHammerBtn.innerText = "Enable Hammer Cursor";
+        }
     }
 
     preloadCover.style.display = "none";
@@ -527,6 +575,10 @@ function updateStatsText(){
     allTimePtsStatText.innerText = gameSetting.allTimePoints;
     xpCountText.innerText = gameSetting.xp;
     bossLevelsStatText.innerText = gameSetting.bossLevelsCount;
+
+    homeNameText.innerText = gameSetting.playerName;
+    settingNameText.innerText = gameSetting.playerName;
+    renameInput.value = gameSetting.playerName;
 }
 
 // LVL
@@ -644,8 +696,6 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
                 // Save to localstorage
                 welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
                 welcomeContainers[index + 1].style.animation = "welcomeSlideIn 200ms ease-in-out forwards";
-
-                console.log(gameSetting);
             }
             else{
                 welcomeNameInput.classList.add('nameInputErr');
@@ -662,9 +712,18 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
                 localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
             }
 
+            updateStatsText();
+
             welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
             setTimeout(() => {
                 welcome.style.display = "none";
+                
+                welcome.classList.remove('initialActive');
+                document.body.classList.remove('helpActive');
+
+                welcomeContainers.forEach((container) => {
+                    container.style.animation = "";
+                })
             }, 200);
         }
 
@@ -683,6 +742,9 @@ welcomeBackBtn.addEventListener('click', () => {
 
     setTimeout(() => {
         welcome.style.display = "none";
+
+        welcome.classList.remove('backActive');
+        welcomeBack.style.animation = "";
     }, 200);
 })
 
@@ -708,5 +770,143 @@ helpIcon.addEventListener('click', () => {
     welcome.style.display = "grid";
     document.body.classList.add('helpActive');
 
+    welcome.classList.add('initialActive');
+})
+
+// SETTING
+// Open and close
+const settingIcon = document.querySelector('.setting__icon');
+const leaveSettingIcon = document.querySelector('.setting__leaveIcon');
+
+settingIcon.addEventListener('click', () => {
+    document.body.classList.remove('activeHome');
+    document.body.classList.add('activeSetting');
+})
+
+leaveSettingIcon.addEventListener('click', () => {
+    document.body.classList.add('activeHome');
+    document.body.classList.remove('activeSetting');
+})
+
+// Each setting
+const settingRenameBtn = document.querySelector('.settingRenameBtn');
+const cancelRenameBtn = document.querySelector('.rename__cancelBtn');
+const confirmRenameBtn = document.querySelector('.rename__confirmBtn');
+const settingResetBtn = document.querySelector('.settingResetBtn');
+const cancelResetBtn = document.querySelector('.reset__cancelBtn');
+const confirmResetBtn = document.querySelector('.reset__confirmBtn');
+
+const settingRenameContainer = document.querySelector('.setting__renameContainer');
+const settingResetContainer = document.querySelector('.setting__resetContainer');
+
+settingRenameBtn.addEventListener('click', () => {
+    settingRenameContainer.style.animation = "fadeIn 300ms ease-in-out forwards";
+    setTimeout(() => {
+        renameInput.focus();
+        
+    }, 100);
+})
+
+cancelRenameBtn.addEventListener('click', () => {
+    settingRenameContainer.style.animation = "fadeOut 300ms ease-in-out forwards";
+})
+
+confirmRenameBtn.addEventListener('click', () => {
+    if(renameInput.value.length <= 2){
+        renameInput.classList.add('inputErr');
+    }
+    else{
+        renameInput.classList.remove('inputErr');
+
+        gameSetting.playerName = renameInput.value;
+        localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+
+        settingRenameContainer.style.animation = "fadeOut 300ms ease-in-out forwards";
+    }
+})
+
+settingCircleBtn.addEventListener('click', () => {
+    if(gameSetting.circleCursor){
+        // Disable
+        circleCursorInner.style.scale = 0;
+        circleCursorOuter.style.scale = 0;
+
+        gameSetting.circleCursor = false;
+        settingCircleBtn.disabled = true;
+
+        localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+        
+        setTimeout(() => {
+            document.body.classList.remove('disabledCursor');
+
+            settingCircleBtn.innerText = "Enable Circle Cursor";
+        }, 200);
+
+        setTimeout(() => {
+            settingCircleBtn.disabled = false;
+        }, 300);
+    }
+    else{
+        // Enable
+        circleCursorInner.style.scale = 1;
+        circleCursorOuter.style.scale = 1;
+
+        gameSetting.circleCursor = true;
+        localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+
+        document.body.classList.add('disabledCursor');
+        settingCircleBtn.disabled = true;
+
+        setTimeout(() => {
+            settingCircleBtn.innerText = "Disable Circle Cursor";
+            
+            settingCircleBtn.disabled = false;
+        }, 300);
+    }
+})
+
+settingHammerBtn.addEventListener('click', () => {
+    if(gameSetting.hammerCursor){
+        // Disable
+        game.style.cursor = "auto";
+        hammerCursor.style.display = "none";
+
+        gameSetting.hammerCursor = false;
+        localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+
+        settingHammerBtn.innerText = "Enable Hammer Cursor";
+    }
+    else{
+        // Enable
+        game.style.cursor = "none";
+        hammerCursor.style.display = "block";
+
+        gameSetting.hammerCursor = true;
+        localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+
+        settingHammerBtn.innerText = "Disable Hammer Cursor";
+    }
+})
+
+settingResetBtn.addEventListener('click', () => {
+    settingResetContainer.style.animation = "fadeIn 300ms ease-in-out forwards";
+})
+
+cancelResetBtn.addEventListener('click', () => {
+    settingResetContainer.style.animation = "fadeOut 300ms ease-in-out forwards";
+})
+
+confirmResetBtn.addEventListener('click', () => {
+    localStorage.removeItem('moleGameSetting');
+    isSettingLoaded = false;
+
+    gameSetting = initialGameSetting;
+
+    settingResetContainer.style.animation = "";
+
+    document.body.classList.add('activeHome');
+    document.body.classList.remove('activeSetting');
+
+    welcome.style.display = "grid";
     welcome.classList.add('initialActive');
 })
