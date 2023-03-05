@@ -36,6 +36,14 @@ const welcomeBackName = document.querySelector('.welcomeBackName');
 const preloadCover = document.querySelector('.preloadCover');
 const homeShop = document.querySelector('.home__shop');
 
+const lvlPopup = document.querySelector('.popup__levelUp');
+const lvlPopupCurrLvl = document.querySelector('.lvl__currLevel');
+const lvlPopupNextLvl = document.querySelector('.lvl__nextLevel');
+const lvlPopupNextLvlPts = document.querySelector('.lvl__nextLevelPts');
+const endGamePopup = document.querySelector('.popup__endGame');
+const endPopupGainPts = document.querySelector('.pop__getPts');
+const endPopupGainCoins = document.querySelector('.pop__getCoins');
+
 const shop = document.querySelector('.shop');
 const homeHunterName = document.querySelector('.shopHunter__name');
 const homeHunterImg = document.querySelector('.shopHunter__img');
@@ -71,6 +79,7 @@ let activeFields = [],
     activeAnimals = [];
 
 let fieldsCount = 9;
+let isLvlUp = false;
 
 let animalTypes = [
     {
@@ -96,7 +105,7 @@ let animalTypes = [
     {
         id: 5,
         pointValue: 0,
-        coinValue: 5
+        coinValue: 2
     }
 ];
 
@@ -131,7 +140,7 @@ let gameSetting = {
     points: 0,
     allTimePoints: 0,
     coins: 0,
-    ownHunters: [1, 2],
+    ownHunters: [1],
     currentHunter: 1,
     bossLevelsCount: 0,
     playerName: null,
@@ -587,15 +596,15 @@ function endGame(){
 
     fieldsArr = [];
 
+    showEndGamePopup();
     resetGameVar();
     updateStatsText();
     updateHunters();
-
-    document.body.classList.remove('gameActive');
-    document.body.classList.add('activeHome');
 }
 
 function resetGameVar(){
+    isLvlUp = false;
+
     if(gameSetting.bossLevel) bossLevelUp();
     else if(gameSetting.points >= gameSetting.nextLvlPts) levelUp();
 
@@ -621,9 +630,18 @@ function updateStatsText(){
     shopCoinCountText.innerText = gameSetting.coins;
 }
 
+function showEndGamePopup(){
+    // TODO
+    endGamePopup.style.animation = "fadeIn 300ms ease-in-out forwards";
+    // endPopupGainPts.
+    // endPopupGainCoins.
+}
+
 // LVL
 // LVL 1 - NORMAL   LVL 2 - NORMAL  LVL 3 - BOSS, ONLY ONE SPECIAL ANIMAL, FASTER GAME, NO NEED TO LEVEL UP
 function levelUp(){
+    isLvlUp = true;
+
     // Deduct points
     gameSetting.points -= gameSetting.nextLvlPts;
 
@@ -650,6 +668,8 @@ function levelUp(){
 }
 
 function bossLevelUp(){
+    isLvlUp = true;
+
     // Lvl UP
     gameSetting.currentLvl++;
 
@@ -1069,4 +1089,36 @@ shopHunterBtns.forEach((hunterBtn, index) => {
             localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
         }
     })
+})
+
+// POPUPs
+const lvlPopupLeaveBtn = document.querySelector('.lvl__continue');
+const endGamePopupLeaveBtn = document.querySelector('.end__continue');
+
+lvlPopupLeaveBtn.addEventListener('click', () => {
+    lvlPopup.style.animation = "fadeOut 300ms ease-in-out forwards";
+})
+
+endGamePopupLeaveBtn.addEventListener('click', () => {
+    endGamePopup.style.animation = "fadeOut 300ms ease-in-out forwards";
+
+    document.body.classList.remove('gameActive');
+    document.body.classList.add('activeHome');
+
+    if(isLvlUp){
+        // lvl popup
+        preloadCover.style.display = "block";
+
+        lvlPopupCurrLvl.innerText = gameSetting.currentLvl;
+        lvlPopupNextLvl.innerText = gameSetting.currentLvl + 1;
+        lvlPopupNextLvlPts.innerText = gameSetting.nextLvlPts;
+
+        setTimeout(() => {
+            lvlPopup.style.animation = "fadeIn 300ms ease-in-out forwards";
+
+            setTimeout(() => {
+                preloadCover.style.display = "none";
+            }, 300);
+        }, 300);
+    }
 })
