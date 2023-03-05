@@ -346,37 +346,10 @@ body.disabledCursor section *, body.disabledCursor{
     padding-block: 94px 114px;
     transform: translateX(100%);
     background-color: black;
+    z-index: 200;
 }
-.welcome .welcomeContainer:nth-of-type(1){
+.welcomeContainer:first-of-type{
     transform: translateX(0);
-    z-index: 110;
-}
-.welcome .welcomeContainer:nth-of-type(2){
-    z-index: 109;
-}
-.welcome .welcomeContainer:nth-of-type(3){
-    z-index: 108;
-}
-.welcome .welcomeContainer:nth-of-type(4){
-    z-index: 107;
-}
-.welcome .welcomeContainer:nth-of-type(5){
-    z-index: 106;
-}
-.welcome .welcomeContainer:nth-of-type(6){
-    z-index: 105;
-}
-.welcome .welcomeContainer:nth-of-type(7){
-    z-index: 104;
-}
-.welcome .welcomeContainer:nth-of-type(8){
-    z-index: 103;
-}
-.welcome .welcomeContainer:nth-of-type(9){
-    z-index: 102;
-}
-.welcome .welcomeContainer:nth-of-type(10){
-    z-index: 101;
 }
 
 
@@ -392,6 +365,14 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     margin-top: auto;
     text-align: center;
 }
+.welcomeBx{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
 .welcomeTitle{
     font-size: 68px;
     font-weight: 700;
@@ -405,8 +386,19 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     font-weight: 400;
 }
 .welcomeAnimalBx .welcomeDesc{
-    font-size: 32px;
+    font-size: 33px;
     text-align: right;
+    position: relative;
+}
+.welcomeAnimalBx .welcomeDesc::before{
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 100%;
+    background-color: white;
 }
 .welcomeNextBtn{
     align-self: flex-end;
@@ -419,6 +411,11 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     font-size: 32px;
     font-weight: 600;
     border-radius: 13px;
+    transition: color 225ms ease-in-out, background-color 225ms ease-in-out;
+}
+.welcomeNextBtn:hover{
+    background-color: white;
+    color: black;
 }
 .welcomeNameInput{
     background-color: black;
@@ -438,10 +435,11 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    max-width: 1040px;
+    max-width: 1070px;
+    column-gap: 30px;
 }
 .welcomeAnimalImg{
-    height: 350px;
+    height: 475px;
 }
 
 .welcomeBack{
@@ -466,6 +464,23 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     border-radius: 13px;
     margin-top: 50px;
 }
+.welcomeAnimalBx .welcomeTitle{
+    font-size: 78px;
+    text-decoration: underline wavy white 4px;
+    text-underline-offset: 20px;
+    margin-bottom: 24px;
+}
+.welcomeLongText{
+    font-size: 32px;
+    font-weight: 100;
+    line-height: 1.25;
+    max-width: 1350px;
+}
+.welcomeLevel .welcomeTitle{
+    font-size: 78px;
+    margin-bottom: 40px;
+}
+
 
 @keyframes welcomeSlideIn {
     0%{

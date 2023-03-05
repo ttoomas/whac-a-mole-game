@@ -80,7 +80,7 @@ let animalTypes = [
     },
     {
         id: 2,
-        pointValue: 7,
+        pointValue: 5,
         coinValue: 0
     },
     {
