@@ -1,7 +1,7 @@
-# Whac-A-Mole Game
+# Whac-A-Mole Viking Edition
 
 ### Image Assets generated using [Midjourney AI](https://midjourney.com/)
 ---
 
-- ### [Live Site](https://ttoomas.github.io/whac-a-mole-game/)
-- ### [Github Repo](https://github.com/ttoomas/whac-a-mole-game)
+- ### [Live Site](https://ttoomas.github.io/whac-a-mole-vikings/)
+- ### [Github Repo](https://github.com/ttoomas/whac-a-mole-vikings)
