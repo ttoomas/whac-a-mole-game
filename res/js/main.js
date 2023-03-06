@@ -36,13 +36,19 @@ const welcomeBackName = document.querySelector('.welcomeBackName');
 const preloadCover = document.querySelector('.preloadCover');
 const homeShop = document.querySelector('.home__shop');
 
+// const popup/
 const lvlPopup = document.querySelector('.popup__levelUp');
 const lvlPopupCurrLvl = document.querySelector('.lvl__currLevel');
 const lvlPopupNextLvl = document.querySelector('.lvl__nextLevel');
 const lvlPopupNextLvlPts = document.querySelector('.lvl__nextLevelPts');
+const lvlPopupGainPts = document.querySelector('.levelGetPts')
+const lvlPopupGainCoins = document.querySelector('.levelGetCoins')
 const endGamePopup = document.querySelector('.popup__endGame');
-const endPopupGainPts = document.querySelector('.pop__getPts');
-const endPopupGainCoins = document.querySelector('.pop__getCoins');
+const endPopupGainPts = document.querySelector('.endGameGetPts');
+const endPopupGainCoins = document.querySelector('.endGameGetCoins');
+
+const endGamePopCounts = document.querySelectorAll('.pop__count.endGamePopCount');
+const levelPopCounts = document.querySelectorAll('.pop__count.levelPopCount');
 
 const shop = document.querySelector('.shop');
 const homeHunterName = document.querySelector('.shopHunter__name');
@@ -77,6 +83,10 @@ let animalAnimationTime = 300;
 
 let activeFields = [],
     activeAnimals = [];
+
+let gameAnimalsCount = [0, 0, 0, 0, 0];
+let gamePointsCount = 0;
+let gameCoinsCount = 0;
 
 let fieldsCount = 9;
 let isLvlUp = false;
@@ -146,7 +156,10 @@ let gameSetting = {
     playerName: null,
     welcomeSlideshow: false,
     circleCursor: true,
-    hammerCursor: true
+    hammerCursor: true,
+    levelAnimalCount: [0, 0, 0, 0, 0],
+    levelPointsCount: 0,
+    levelCoinsCount: 0
 }
 
 let initialGameSetting = {
@@ -163,7 +176,10 @@ let initialGameSetting = {
     playerName: null,
     welcomeSlideshow: false,
     circleCursor: true,
-    hammerCursor: true
+    hammerCursor: true,
+    levelAnimalCount: [0, 0, 0, 0, 0],
+    levelPointsCount: 0,
+    levelCoinsCount: 0
 }
 
 let currentTime;
@@ -360,6 +376,14 @@ class EventListener{
             gameSetting.coins += animalStats.coinValue;
             currentProgress += (currentProgressStep * animalStats.pointValue);
 
+            gameAnimalsCount[animalId - 1]++;
+            gamePointsCount += animalStats.pointValue;
+            gameCoinsCount += animalStats.coinValue;
+
+            gameSetting.levelAnimalCount[animalId - 1]++;
+            gameSetting.levelPointsCount += animalStats.pointValue;
+            gameSetting.levelCoinsCount += animalStats.coinValue;
+
             gameFieldAnimal.style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
             gameFieldAnimal.classList.remove('animalActive');
 
@@ -529,7 +553,7 @@ function startGame(){
 
     if(gameSetting.bossLevel){
         // Boss level
-
+        popup
         game.classList.add('bossLevel');
 
         for (let i = 0; i < 5; i++) {
@@ -596,6 +620,7 @@ function endGame(){
 
     fieldsArr = [];
 
+    updateAnimalCountStats();
     showEndGamePopup();
     resetGameVar();
     updateStatsText();
@@ -631,10 +656,21 @@ function updateStatsText(){
 }
 
 function showEndGamePopup(){
-    // TODO
     endGamePopup.style.animation = "fadeIn 300ms ease-in-out forwards";
-    // endPopupGainPts.
-    // endPopupGainCoins.
+}
+
+function updateAnimalCountStats(){
+    gameAnimalsCount.forEach((animal, index) => {
+        endGamePopCounts[index].innerText = animal;
+    })
+
+    endPopupGainPts.innerText = gamePointsCount;
+    endPopupGainCoins.innerText = gameCoinsCount;
+
+    gameAnimalsCount = [0, 0, 0, 0, 0];
+
+    gamePointsCount = 0;
+    gameCoinsCount = 0;
 }
 
 // LVL
@@ -890,6 +926,8 @@ confirmRenameBtn.addEventListener('click', () => {
 
         gameSetting.playerName = renameInput.value;
         localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+        
+        updateStatsText();
 
         settingRenameContainer.style.animation = "fadeOut 300ms ease-in-out forwards";
     }
@@ -1106,6 +1144,8 @@ endGamePopupLeaveBtn.addEventListener('click', () => {
     document.body.classList.add('activeHome');
 
     if(isLvlUp){
+        updateAnimalCountLevelStats();
+
         // lvl popup
         preloadCover.style.display = "block";
 
@@ -1122,3 +1162,17 @@ endGamePopupLeaveBtn.addEventListener('click', () => {
         }, 300);
     }
 })
+
+function updateAnimalCountLevelStats(){
+    gameSetting.levelAnimalCount.forEach((animal, index) => {
+        levelPopCounts[index].innerText = animal;
+    })
+
+    lvlPopupGainPts.innerText = gameSetting.levelPointsCount;
+    lvlPopupGainCoins.innerText = gameSetting.levelCoinsCount;
+
+    gameSetting.levelAnimalCount = [0, 0, 0, 0, 0];
+
+    gameSetting.levelPointsCount = 0;
+    gameSetting.levelCoinsCount = 0;
+}
