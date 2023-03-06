@@ -1122,7 +1122,7 @@ body.activeSetting .setting{
     content: '';
     position: absolute;
     left: 50%;
-    bottom: -12px;
+    bottom: -38px;
     transform: translateX(-50%);
     width: 80%;
     height: 2px;
@@ -1136,6 +1136,7 @@ body.activeSetting .setting{
 }
 .pop__subTitle{
     font-size: 50px;
+    margin-bottom: 20px;
 }
 .pop__bx{
     display: flex;
@@ -1182,10 +1183,10 @@ body.activeSetting .setting{
     z-index: 2;
 }
 
-.popup.normalLevel .pop__stat.bossAnimal{
+.popup__endGame.normalLevel .pop__stat.bossAnimal{
     display: none;
 }
-.popup.bossLevel .pop__stat:not(.bossAnimal){
+.popup__endGame.bossLevel .pop__stat:not(.bossAnimal){
     display: none;
 }
 

@@ -36,7 +36,6 @@ const welcomeBackName = document.querySelector('.welcomeBackName');
 const preloadCover = document.querySelector('.preloadCover');
 const homeShop = document.querySelector('.home__shop');
 
-// const popup/
 const lvlPopup = document.querySelector('.popup__levelUp');
 const lvlPopupCurrLvl = document.querySelector('.lvl__currLevel');
 const lvlPopupNextLvl = document.querySelector('.lvl__nextLevel');
@@ -143,9 +142,9 @@ let huntersInfo = [
 ]
 
 let gameSetting = {
-    time: 10,
+    time: 2,
     currentLvl: 1,
-    nextLvlPts: 25,
+    nextLvlPts: 1,
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
@@ -248,6 +247,10 @@ onLoadGameSetting();
 // Game fields
 createGameFields(fieldsCount);
 
+let fieldIntervals = [];
+let currentGameEnded = false;
+let currentResetActive = false;
+
 
 class Field{
     constructor(minTimeInterval, maxTimeInterval){
@@ -267,6 +270,12 @@ class Field{
     }
 
     checkCurrentField(){
+        if(currentGameEnded){
+            if(!currentResetActive) resetGameFields();
+
+            return;
+        }
+
         if(this.currentField !== null){
             gameFields[this.currentField].style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
             gameFields[this.currentField].classList.remove('animalActive');
@@ -322,31 +331,9 @@ class Field{
         gameFields[this.currentField].style.animation = `animalFadeIn ${animalAnimationTime}ms ease-in-out forwards`;
         gameFields[this.currentField].classList.add('animalActive');
 
-        this.fieldInterval = setTimeout(() => {
+        setTimeout(() => {
             this.checkCurrentField();
         }, randomNumber((this.minTimeInterval + animalAnimationTime), (this.maxTimeInterval + animalAnimationTime)));
-    }
-
-    deleteInterval(){
-        clearInterval(this.fieldInterval);
-
-        gameFields[this.currentField].style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
-        gameFields[this.currentField].classList.remove('animalActive');
-        
-        setTimeout(() => {
-            gameFields[this.currentField].src = "";
-            gameFields[this.currentField].removeAttribute('data-animal-id');
-
-            if(this.oldField !== null){
-                let fieldIndex = activeFields.indexOf(this.oldField);
-                activeFields.splice(fieldIndex, 1);
-            }
-    
-            if(this.oldAnimal !== null){
-                let animalIndex = activeAnimals.indexOf(this.oldAnimal);
-                activeAnimals.splice(animalIndex, 1);
-            }
-        }, animalAnimationTime);
     }
 }
 
@@ -539,8 +526,6 @@ new EventListener();
 
 // Start game
 let gameInterval;
-let testField;
-let fieldsArr = [];
 
 startGameBtn.addEventListener('click', () => {
     startGame();
@@ -548,12 +533,13 @@ startGameBtn.addEventListener('click', () => {
 })
 
 function startGame(){
+    currentGameEnded = false;
+
     document.body.classList.add('gameActive');
     document.body.classList.remove('activeHome');
 
     if(gameSetting.bossLevel){
         // Boss level
-        popup
         game.classList.add('bossLevel');
 
         for (let i = 0; i < 5; i++) {
@@ -564,9 +550,7 @@ function startGame(){
                 maxTime = randomNumber(500, 1500);
             } while (maxTime <= (minTime + 150))
 
-            console.log(minTime, maxTime);
-
-            fieldsArr.push(new Field(minTime, maxTime));
+            new Field(minTime, maxTime);
         }
 
         if(gameSetting.currentHunter === 2){
@@ -587,7 +571,7 @@ function startGame(){
         game.classList.add('normalLevel');
     
         for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
-            fieldsArr.push(new Field(500, 600));
+            new Field(500, 600);
         }
 
         currentTime = gameSetting.time;
@@ -614,11 +598,16 @@ function startGame(){
 function endGame(){
     clearInterval(gameInterval);
 
-    fieldsArr.forEach(field => {
-        field.deleteInterval();
-    });
+    currentGameEnded = true;
+    currentResetActive = true;
 
-    fieldsArr = [];
+    activeFields = [];
+    activeAnimals = [];
+
+    setTimeout(() => {
+        resetGameFields();
+        currentResetActive = false;
+    }, animalAnimationTime);
 
     updateAnimalCountStats();
     showEndGamePopup();
@@ -626,6 +615,17 @@ function endGame(){
     updateStatsText();
     updateHunters();
 }
+
+
+function resetGameFields(){
+    gameFields.forEach((field) => {
+        field.src = "";
+        field.removeAttribute('data-animal-id');
+        field.style.animation = `animalFadeOut ${animalAnimationTime}ms ease-in-out forwards`;
+        field.classList.remove('activeAnimal');
+    })
+}
+
 
 function resetGameVar(){
     isLvlUp = false;
@@ -660,6 +660,15 @@ function showEndGamePopup(){
 }
 
 function updateAnimalCountStats(){
+    if(gameSetting.bossLevel){
+        endGamePopup.classList.add('bossLevel');
+        endGamePopup.classList.remove('normalLevel');
+    }
+    else{
+        endGamePopup.classList.remove('bossLevel');
+        endGamePopup.classList.add('normalLevel');
+    }
+
     gameAnimalsCount.forEach((animal, index) => {
         endGamePopCounts[index].innerText = animal;
     })
@@ -1172,6 +1181,7 @@ function updateAnimalCountLevelStats(){
     lvlPopupGainCoins.innerText = gameSetting.levelCoinsCount;
 
     gameSetting.levelAnimalCount = [0, 0, 0, 0, 0];
+    gameAnimalsCount = [0, 0, 0, 0, 0];
 
     gameSetting.levelPointsCount = 0;
     gameSetting.levelCoinsCount = 0;
