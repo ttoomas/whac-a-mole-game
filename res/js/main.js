@@ -1,12 +1,9 @@
 const game = document.querySelector('.game');
 const gameFieldBx = document.querySelector('.game__fieldContainer');
 const timeText = document.querySelector('.game__timeText');
-const lvlText = document.querySelector('.game__lvlText');
 const ptsText = document.querySelector('.game__ptsText');
 const progressText = document.querySelector('.progress__text');
 const progressBar = document.querySelector('.progress__bar.progressGreen');
-const reachLvlText = document.querySelector('.reach__lvlText');
-const reachPtsText = document.querySelector('.reach__ptsText');
 
 const startGameBtn = document.querySelector('.battle__btn');
 const hammerCursor = document.querySelector('.cursor__hammerBx');
@@ -20,10 +17,8 @@ const levelStatText = document.querySelector('.stat__text.levelText');
 const timeStatText = document.querySelector('.stat__text.timeText');
 const nextLvlPtsStatText = document.querySelector('.stat__text.nextLvlPtsText');
 const currPtsStatText = document.querySelector('.stat__text.currPtsText');
-const allTimePtsStatText = document.querySelector('.stat__text.allTimePtsText');
 const coinCountText = document.querySelector('.stat__text.coinCountText');
 const shopCoinCountText = document.querySelector('.res__coin');
-const bossLevelsStatText = document.querySelector('.stat__text.bossLevelsText');
 
 const renameInput = document.querySelector('.rename__input');
 const settingCircleBtn = document.querySelector('.settingCircleBtn');
@@ -48,6 +43,12 @@ const endPopupGainCoins = document.querySelector('.endGameGetCoins');
 
 const endGamePopCounts = document.querySelectorAll('.pop__count.endGamePopCount');
 const levelPopCounts = document.querySelectorAll('.pop__count.levelPopCount');
+const introPopup = document.querySelector('.popup__intro');
+const introPopupNextLvlCoins = document.querySelector('.intro__needCoins');
+
+const infoAllTimePoints = document.querySelector('.allTimePtsText');
+const infoBossLevels = document.querySelector('.bossLevelsText');
+const infoAnimalCounts = document.querySelectorAll('.animal__count');
 
 const shop = document.querySelector('.shop');
 const homeHunterName = document.querySelector('.shopHunter__name');
@@ -142,9 +143,9 @@ let huntersInfo = [
 ]
 
 let gameSetting = {
-    time: 2,
+    time: 10,
     currentLvl: 1,
-    nextLvlPts: 1,
+    nextLvlPts: 25,
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
@@ -158,7 +159,8 @@ let gameSetting = {
     hammerCursor: true,
     levelAnimalCount: [0, 0, 0, 0, 0],
     levelPointsCount: 0,
-    levelCoinsCount: 0
+    levelCoinsCount: 0,
+    gameAnimalCount: [0, 0, 0, 0, 0]
 }
 
 let initialGameSetting = {
@@ -178,7 +180,8 @@ let initialGameSetting = {
     hammerCursor: true,
     levelAnimalCount: [0, 0, 0, 0, 0],
     levelPointsCount: 0,
-    levelCoinsCount: 0
+    levelCoinsCount: 0,
+    gameAnimalCount: [0, 0, 0, 0, 0]
 }
 
 let currentTime;
@@ -364,6 +367,7 @@ class EventListener{
             currentProgress += (currentProgressStep * animalStats.pointValue);
 
             gameAnimalsCount[animalId - 1]++;
+            gameSetting.gameAnimalCount[animalId - 1]++;
             gamePointsCount += animalStats.pointValue;
             gameCoinsCount += animalStats.coinValue;
 
@@ -528,30 +532,22 @@ new EventListener();
 let gameInterval;
 
 startGameBtn.addEventListener('click', () => {
-    startGame();
+    setGame();
     changeCursor();
 })
 
-function startGame(){
+function setGame(){
     currentGameEnded = false;
-
-    document.body.classList.add('gameActive');
-    document.body.classList.remove('activeHome');
 
     if(gameSetting.bossLevel){
         // Boss level
+        game.classList.remove('normalLevel');
         game.classList.add('bossLevel');
 
-        for (let i = 0; i < 5; i++) {
-            let minTime = randomNumber(100, 1000);
-            let maxTime;
-
-            do {
-                maxTime = randomNumber(500, 1500);
-            } while (maxTime <= (minTime + 150))
-
-            new Field(minTime, maxTime);
-        }
+        introPopup.style.animation = "fadeIn 300ms ease-in-out forwards";
+        introPopup.classList.remove('introNormal');
+        introPopup.classList.add('introBoss');
+        startIntroAnimation();
 
         if(gameSetting.currentHunter === 2){
             currentTime = 15;
@@ -564,16 +560,16 @@ function startGame(){
     }
     
     else{
-        lvlText.innerText = gameSetting.currentLvl;
-        reachPtsText.innerText = gameSetting.nextLvlPts;
-        reachLvlText.innerText = (gameSetting.currentLvl + 1);
-
         game.classList.add('normalLevel');
-    
-        for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
-            new Field(500, 600);
-        }
+        game.classList.remove('bossLevel');
 
+        introPopupNextLvlCoins.innerText = (gameSetting.nextLvlPts - gameSetting.points);
+
+        introPopup.style.animation = "fadeIn 300ms ease-in-out forwards";
+        introPopup.classList.add('introNormal');
+        introPopup.classList.remove('introBoss');
+        startIntroAnimation();
+    
         currentTime = gameSetting.time;
 
         if(gameSetting.currentHunter === 2){
@@ -581,6 +577,31 @@ function startGame(){
         }
 
         timeText.innerText = currentTime;
+    }
+
+    setTimeout(() => {
+        document.body.classList.add('gameActive');
+        document.body.classList.remove('activeHome');
+    }, 300);
+}
+
+function startGame(){
+    if(gameSetting.bossLevel){
+        for (let i = 0; i < 5; i++) {
+            let minTime = randomNumber(100, 1000);
+            let maxTime;
+
+            do {
+                maxTime = randomNumber(500, 1500);
+            } while (maxTime <= (minTime + 150))
+
+            new Field(minTime, maxTime);
+        }
+    }
+    else{
+        for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
+            new Field(500, 600);
+        }
     }
 
     gameInterval = setInterval(() => {
@@ -596,24 +617,27 @@ function startGame(){
 }
 
 function endGame(){
-    clearInterval(gameInterval);
-
-    currentGameEnded = true;
-    currentResetActive = true;
-
-    activeFields = [];
-    activeAnimals = [];
+    showEndGamePopup();
+    updateAnimalCountStats();
+    updateStatsText();
 
     setTimeout(() => {
-        resetGameFields();
-        currentResetActive = false;
-    }, animalAnimationTime);
-
-    updateAnimalCountStats();
-    showEndGamePopup();
-    resetGameVar();
-    updateStatsText();
-    updateHunters();
+        clearInterval(gameInterval);
+    
+        currentGameEnded = true;
+        currentResetActive = true;
+    
+        activeFields = [];
+        activeAnimals = [];
+    
+        setTimeout(() => {
+            resetGameFields();
+            currentResetActive = false;
+        }, animalAnimationTime);
+    
+        resetGameVar();
+        updateHunters();
+    }, 300);
 }
 
 
@@ -644,8 +668,8 @@ function updateStatsText(){
     timeStatText.innerText = gameSetting.time;
     nextLvlPtsStatText.innerText = gameSetting.nextLvlPts;
     currPtsStatText.innerText = gameSetting.points;
-    allTimePtsStatText.innerText = gameSetting.allTimePoints;
-    bossLevelsStatText.innerText = gameSetting.bossLevelsCount;
+    // allTimePtsStatText.innerText = gameSetting.allTimePoints;
+    // bossLevelsStatText.innerText = gameSetting.bossLevelsCount;
     
     homeNameText.innerText = gameSetting.playerName;
     settingNameText.innerText = gameSetting.playerName;
@@ -653,6 +677,12 @@ function updateStatsText(){
 
     coinCountText.innerText = gameSetting.coins;
     shopCoinCountText.innerText = gameSetting.coins;
+
+    infoAllTimePoints.innerText = gameSetting.allTimePoints;
+    infoBossLevels.innerText = gameSetting.bossLevelsCount;
+    infoAnimalCounts.forEach((info, index) => {
+        info.innerText = gameSetting.gameAnimalCount[index];
+    })
 }
 
 function showEndGamePopup(){
@@ -696,10 +726,6 @@ function levelUp(){
     gameSetting.currentLvl++;
     gameSetting.nextLvlPts += Math.ceil(gameSetting.nextLvlPts / 5) * 2;
 
-    lvlText.innerText = gameSetting.currentLvl;
-    reachPtsText.innerText = gameSetting.nextLvlPts;
-    reachLvlText.innerText = (gameSetting.currentLvl + 1);
-
     // Set progress bar
     currentProgressStep = (100 / gameSetting.nextLvlPts);
     currentProgress = currentProgressStep * gameSetting.points;
@@ -718,9 +744,6 @@ function bossLevelUp(){
     // Lvl UP
     gameSetting.currentLvl++;
 
-    lvlText.innerText = gameSetting.currentLvl;
-    reachLvlText.innerText = (gameSetting.currentLvl + 1);
-
     // Set progress bar
     currentProgressStep = (100 / gameSetting.nextLvlPts);
     currentProgress = currentProgressStep * gameSetting.points;
@@ -731,7 +754,10 @@ function bossLevelUp(){
     gameSetting.bossLevel = false;
     gameSetting.bossLevelsCount++;
 
-    gameSetting.activeFieldsCount++;
+    if(gameSetting.activeFieldsCount < 5){
+        gameSetting.activeFieldsCount++;
+    }
+
     gameSetting.time += Math.ceil(gameSetting.time / 5) * 2;
 }
 
@@ -1186,3 +1212,65 @@ function updateAnimalCountLevelStats(){
     gameSetting.levelPointsCount = 0;
     gameSetting.levelCoinsCount = 0;
 }
+
+
+// Popup intro
+const normalIntroTexts = document.querySelectorAll('.intro__container.introNormalLevel .intro__text');
+const bossIntroTexts = document.querySelectorAll('.intro__container.introBossLevel .intro__text');
+
+let introIndex = 0;
+let currentIntroTexts;
+let currentSpeed = 0;
+
+function startIntroAnimation(){
+    introIndex = 0;
+    currentSpeed = 0;
+
+    if(introPopup.classList.contains('introNormal')) currentIntroTexts = normalIntroTexts;
+    else currentIntroTexts = bossIntroTexts;
+
+    introInterval();
+}
+
+function introInterval(){
+    setTimeout(() => {
+        currentSpeed = parseInt(currentIntroTexts[introIndex].getAttribute('data-ani-speed'));
+        
+        currentIntroTexts[introIndex].style.animation = `introFade ${currentSpeed}ms linear`;
+
+        introIndex++
+
+        if(introIndex !== currentIntroTexts.length) introInterval();
+
+        else {
+            setTimeout(() => {
+                introPopup.style.animation = `fadeOut ${(currentSpeed / 100) * 30}ms ease-in-out forwards`;
+            }, (currentSpeed / 100) * 70);
+
+            setTimeout(() => {
+                startGame();
+
+                currentIntroTexts.forEach((text) => {
+                    text.style.animation = "";
+                })
+
+                introPopup.style.animation = "";
+            }, currentSpeed + 200);
+        }
+    }, currentSpeed + 200);
+}
+
+// startIntroAnimation();
+
+// Info section
+const openGameInfo = document.querySelector('.setting__info');
+const leaveInfo = document.querySelector('.info__leave');
+const info = document.querySelector('.info');
+
+openGameInfo.addEventListener('click', () => {
+    info.style.animation = "fadeIn 300ms ease-in-out forwards";
+})
+
+leaveInfo.addEventListener('click', () => {
+    info.style.animation = "fadeOut 300ms ease-in-out forwards";
+})

@@ -20,10 +20,6 @@
                 Time Left:
                 <span class="game__timeText">1:00</span>
             </p>
-            <p class="game__lvl">
-                Level:
-                <span class="game__lvlText">1</span>
-            </p>
             <p class="game__pts">
                 Points:
                 <span class="game__ptsText">0</span>
@@ -48,21 +44,16 @@
             </div>
 
         </div>
-
-        <h2 class="game__reach">
-            To reach level
-            <span class="reach__lvlText">2</span>
-            You need
-            <span class="reach__ptsText">50</span>
-            points
-        </h2>
     </main>
 
 
     <section class="home">
         <div class="home__setting">
-            <h3 class="setting__name">ttoomas</h3>
-            <img src="./res/images/settingIcon.png" alt="" class="setting__icon circleCursor smallCursor" draggable="false">
+            <h3 class="setting__info circleCursor smallCursor">Game Achievements</h3>
+            <div class="setting__left">
+                <h3 class="setting__name">ttoomas</h3>
+                <img src="./res/images/settingIcon.png" alt="" class="setting__icon circleCursor smallCursor" draggable="false">
+            </div>
         </div>
 
         <div class="home__shop">
@@ -94,16 +85,8 @@
                 <p class="stat__name">points</p>
             </div>
             <div class="stat__level">
-                <p class="stat__text allTimePtsText">0</p>
-                <p class="stat__name">all-time points</p>
-            </div>
-            <div class="stat__level">
                 <p class="stat__text coinCountText">0</p>
                 <p class="stat__name">coins</p>
-            </div>
-            <div class="stat__level">
-                <p class="stat__text bossLevelsText">0</p>
-                <p class="stat__name">boss levels</p>
             </div>
         </div>
             
@@ -248,6 +231,60 @@
             <div class="reset__btnBx">
                 <button class="reset__cancelBtn reset__btn circleCursor smallCursor">Cancel</button>
                 <button class="reset__confirmBtn reset__btn circleCursor smallCursor">Reset</button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="info">
+        <div class="info__menu">
+            <div class="info__leaveBx">
+                <img src="./res/images/leaveIcon.png" alt="" class="info__leave circleCursor smallCursor">
+            </div>
+            <h1 class="info__title">All time Game Achievements</h1>
+        </div>
+
+        <div class="info__game">
+            <div class="game__level">
+                <p class="game__text allTimePtsText">0</p>
+                <p class="game__name">all-time points</p>
+            </div>
+            <div class="game__level">
+                <p class="game__text bossLevelsText">0</p>
+                <p class="game__name">boss levels</p>
+            </div>
+        </div>
+
+        <div class="info__animal">
+            <div class="animal__stat">
+                <div class="animal__imgBx">
+                    <img src="./res/images/animal1.png" alt="" class="animal__img" draggable="false">
+                </div>
+                <p class="animal__count">...</p>
+            </div>
+            <div class="animal__stat">
+                <div class="animal__imgBx">
+                    <img src="./res/images/animal2.png" alt="" class="animal__img" draggable="false">
+                </div>
+                <p class="animal__count">...</p>
+            </div>
+            <div class="animal__stat">
+                <div class="animal__imgBx">
+                    <img src="./res/images/animal3.png" alt="" class="animal__img" draggable="false">
+                </div>
+                <p class="animal__count">...</p>
+            </div>
+            <div class="animal__stat">
+                <div class="animal__imgBx">
+                    <img src="./res/images/animal4.png" alt="" class="animal__img" draggable="false">
+                </div>
+                <p class="animal__count">...</p>
+            </div>
+            <div class="animal__stat">
+                <div class="animal__imgBx">
+                    <img src="./res/images/animal5.png" alt="" class="animal__img" draggable="false">
+                </div>
+                <p class="animal__count">...</p>
             </div>
         </div>
     </section>
@@ -497,6 +534,30 @@
             </div>
 
             <button class="pop__continue end__continue circleCursor">Continue</button>
+        </div>
+
+        <div class="popup__intro">
+            <!-- Game started; 
+                if boss, this is boss level; you dont need any points, just collect coins;
+                else you will need x points to level up
+            Good luck -->
+            <div class="intro__container introBossLevel">
+                <h2 class="intro__text" data-ani-speed="1600">The Game Begins!</h2>
+                <h2 class="intro__text" data-ani-speed="1600">This is Boss Level</h2>
+                <h2 class="intro__text" data-ani-speed="2600">It is also a Free level, so you<br> do not need any points</h2>
+                <h2 class="intro__text" data-ani-speed="2000">Just collect as many Coins you can</h2>
+                <h2 class="intro__text" data-ani-speed="1800">Good Luck!</h2>
+            </div>
+
+            <div class="intro__container introNormalLevel">
+                <h2 class="intro__text" data-ani-speed="1600">The Game Begins</h2>
+                <h2 class="intro__text" data-ani-speed="2000">
+                    You will need
+                    <span class="intro__needCoins">...</span>
+                    Coins to Level Up
+                </h2>
+                <h2 class="intro__text" data-ani-speed="1800">Good Luck!</h2>
+            </div>
         </div>
     </section>
 
