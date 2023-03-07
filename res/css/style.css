@@ -493,9 +493,6 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
 
     display: none;
 }
-.welcome{
-    display: none !important;
-}
 
 body.activeHome .home{
     display: flex;

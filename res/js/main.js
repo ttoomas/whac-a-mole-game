@@ -195,7 +195,8 @@ let isSettingLoaded = false;
 function onLoadGameSetting(){
     let loadedGameSetting = JSON.parse(localStorage.getItem('moleGameSetting'));
 
-    if(loadedGameSetting === null || !loadedGameSetting.welcomeSlideshow){
+    if(loadedGameSetting === null || !loadedGameSetting.welcomeSlideshow || loadedGameSetting.length !== initialGameSetting.length){
+        localStorage.removeItem('moleGameSetting');
         welcome.classList.add('initialActive');
     }
 
