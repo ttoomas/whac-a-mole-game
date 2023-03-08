@@ -366,6 +366,9 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     height: 100%;
     background-color: white;
 }
+.welcomeContainer.welcomeAnimal .welcomeDesc{
+    max-width: 1200px;
+}
 
 .welcomeBtnBx{
     margin-top: auto;
@@ -661,6 +664,7 @@ body.activeHome .home{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 30px;
 }
 .setting__info{
     font-size: 34px;
@@ -699,13 +703,18 @@ body.activeHome .home{
 .setting__icon:hover{
     transform: rotate(180deg) scale(1.1);
 }
+
+.home__mainContainer{
+    display: flex;
+    flex-direction: column;
+    margin-block: auto;
+}
 .home__shop{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     column-gap: 26px;
-    margin-top: 30px;
 }
 .shop__hunterBx{
     display: flex;
@@ -797,7 +806,7 @@ body.activeHome .home{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 68px;
+    margin-block: 68px 22px;
 }
 .battle__btn{
     background-color: white;

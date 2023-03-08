@@ -601,11 +601,11 @@ function setGame(){
 function startGame(){
     if(gameSetting.bossLevel){
         for (let i = 0; i < 5; i++) {
-            let minTime = randomNumber(100, 1000);
+            let minTime = randomNumber(300, 2000);
             let maxTime;
 
             do {
-                maxTime = randomNumber(500, 1500);
+                maxTime = randomNumber(1000, 4000);
             } while (maxTime <= (minTime + 150))
 
             new Field(minTime, maxTime);
@@ -613,7 +613,7 @@ function startGame(){
     }
     else{
         for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
-            new Field(500, 600);
+            new Field(300, 1000);
         }
     }
 
