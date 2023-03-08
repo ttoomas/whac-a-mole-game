@@ -366,22 +366,45 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     height: 100%;
     background-color: white;
 }
-.welcomeNextBtn{
-    align-self: flex-end;
+
+.welcomeBtnBx{
     margin-top: auto;
-    background-color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.welcomeNextBtn,
+.welcomeSkipBtn{
     border: 2px solid white;
     outline: none;
-    color: white;
     padding: 10px 28px;
     font-size: 32px;
     font-weight: 600;
     border-radius: 13px;
     transition: color 225ms ease-in-out, background-color 225ms ease-in-out;
 }
+.welcomeNextBtn{
+    background-color: black;
+    color: white;
+    margin-left: auto;
+}
+.welcomeSkipBtn{
+    background-color: white;
+    color: black;
+    display: none;
+}
+body.helpActive .welcomeSkipBtn{
+    display: block;
+}
 .welcomeNextBtn:hover{
     background-color: white;
     color: black;
+}
+.welcomeSkipBtn:hover{
+    background-color: black;   
+    color: white;
 }
 .welcomeNameInput{
     background-color: black;
@@ -429,6 +452,11 @@ body.helpActive .welcome .welcomeContainer:nth-of-type(3){
     font-weight: 600;
     border-radius: 13px;
     margin-top: 50px;
+    transition: color 215ms ease-in-out, background-color 215ms ease-in-out;
+}
+.welcomeBackBtn:hover{
+    background-color: white;
+    color: black;
 }
 .welcomeAnimalBx .welcomeTitle{
     font-size: 78px;
@@ -1307,7 +1335,7 @@ body.activeSetting .setting{
 }
 .info__title{
     margin-inline: auto;
-    font-size: 58px;
+    font-size: 66px;
     font-weight: 500;
 }
 .info__leaveBx{
@@ -1326,7 +1354,7 @@ body.activeSetting .setting{
     align-items: center;
     justify-content: center;
     column-gap: 40px;
-    margin-block: 94px 54px;
+    margin-block: 112px 72px;
 }
 .game__level{
     display: flex;
@@ -1335,24 +1363,24 @@ body.activeSetting .setting{
     justify-content: center;
     border: 1px solid white;
     border-radius: 12px;
-    padding: 10px 36px;
+    padding: 14px 48px;
 }
 .game__text{
-    font-size: 28px;
+    font-size: 40px;
 }
 .game__name{
-    font-size: 20px;
+    font-size: 28px;
     text-transform: capitalize;
-    border-top: 1px dashed white;
-    padding-top: 12px;
-    margin-top: 12px;
+    border-top: 2px dashed white;
+    padding-top: 16px;
+    margin-top: 16px;
 }
 .info__animal{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    column-gap: 30px;
+    column-gap: 44px;
 }
 .animal__stat{
     position: relative;
@@ -1360,14 +1388,15 @@ body.activeSetting .setting{
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    row-gap: 8px;
 }
 .animal__imgBx{
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
-    height: 150px;
+    width: 180px;
+    height: 180px;
 }
 .animal__imgBx::before{
     content: '';
@@ -1383,11 +1412,16 @@ body.activeSetting .setting{
     pointer-events: none;
 }
 .animal__count{
-    font-size: 36px;
+    font-size: 38px;
 }
 .animal__img{
     width: 70%;
     height: 70%;
     object-fit: contain;
     z-index: 2;
+}
+
+/* Circle cursor */
+.circleCursor{
+    cursor: pointer;
 }

@@ -195,7 +195,11 @@ let isSettingLoaded = false;
 function onLoadGameSetting(){
     let loadedGameSetting = JSON.parse(localStorage.getItem('moleGameSetting'));
 
-    if(loadedGameSetting === null || !loadedGameSetting.welcomeSlideshow || loadedGameSetting.length !== initialGameSetting.length){
+    if(loadedGameSetting === null){
+        welcome.classList.add('initialActive');
+    }
+
+    else if(Object.keys(loadedGameSetting).length !== Object.keys(initialGameSetting).length || !loadedGameSetting.welcomeSlideshow){
         localStorage.removeItem('moleGameSetting');
         welcome.classList.add('initialActive');
     }
@@ -836,8 +840,6 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
 
         // Last slide
         else if(welcomeContainers[index].classList.contains('welcomeEndSlideshow')){
-            console.log("last slide");
-
             gameSetting.welcomeSlideshow = true;
 
             if(!isSettingLoaded){
@@ -910,9 +912,32 @@ const helpIcon = document.querySelector('.help__icon');
 
 helpIcon.addEventListener('click', () => {
     welcome.style.display = "grid";
+
     document.body.classList.add('helpActive');
 
     welcome.classList.add('initialActive');
+})
+
+// Skip button
+const welcomeSkipBtns = document.querySelectorAll('.welcomeSkipBtn');
+
+welcomeSkipBtns.forEach((skipBtn, index) => {
+    skipBtn.addEventListener('click', () => {
+        welcomeContainers[index + 2].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
+
+        setTimeout(() => {
+            welcome.style.display = "none";
+
+            welcomeContainers[index + 2].style.animation = "";
+
+            welcome.classList.remove('initialActive');
+            document.body.classList.remove('helpActive');
+
+            welcomeContainers.forEach((container) => {
+                container.style.animal = "";
+            })
+        }, 200);
+    })
 })
 
 // SETTING
@@ -1052,6 +1077,7 @@ confirmResetBtn.addEventListener('click', () => {
     document.body.classList.remove('activeSetting');
 
     welcome.style.display = "grid";
+
     welcome.classList.add('initialActive');
 })
 
