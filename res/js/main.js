@@ -145,7 +145,7 @@ let huntersInfo = [
 let gameSetting = {
     time: 10,
     currentLvl: 1,
-    nextLvlPts: 25,
+    nextLvlPts: 35,
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
@@ -166,7 +166,7 @@ let gameSetting = {
 let initialGameSetting = {
     time: 10,
     currentLvl: 1,
-    nextLvlPts: 25,
+    nextLvlPts: 35,
     activeFieldsCount: 1,
     points: 0,
     allTimePoints: 0,
@@ -199,7 +199,12 @@ function onLoadGameSetting(){
         welcome.classList.add('initialActive');
     }
 
-    else if(Object.keys(loadedGameSetting).length !== Object.keys(initialGameSetting).length || !loadedGameSetting.welcomeSlideshow){
+
+    else if(
+            Object.keys(loadedGameSetting).length !== Object.keys(initialGameSetting).length ||
+            !loadedGameSetting.welcomeSlideshow ||
+            (initialGameSetting.nextLvlPts !== loadedGameSetting.nextLvlPts && loadedGameSetting.currentLvl === 1)
+        ){
         localStorage.removeItem('moleGameSetting');
         welcome.classList.add('initialActive');
     }
@@ -374,6 +379,7 @@ class EventListener{
             gameAnimalsCount[animalId - 1]++;
             gameSetting.gameAnimalCount[animalId - 1]++;
             gamePointsCount += animalStats.pointValue;
+            console.log(gamePointsCount);
             gameCoinsCount += animalStats.coinValue;
 
             gameSetting.levelAnimalCount[animalId - 1]++;
@@ -708,7 +714,13 @@ function updateAnimalCountStats(){
         endGamePopCounts[index].innerText = animal;
     })
 
-    endPopupGainPts.innerText = gamePointsCount;
+    if(gamePointsCount > 0){
+        endPopupGainPts.innerText = `+${gamePointsCount}`;
+    }
+    else{
+        endPopupGainPts.innerText = gamePointsCount;
+    }
+
     endPopupGainCoins.innerText = gameCoinsCount;
 
     gameAnimalsCount = [0, 0, 0, 0, 0];
@@ -1167,7 +1179,7 @@ function updateHunters(){
 
     // Animals bonuses
     animalTypes[0].pointValue = 10;
-    animalTypes[1].pointValue = 7;
+    animalTypes[1].pointValue = 5;
     animalTypes[2].pointValue = 1;
     animalTypes[3].pointValue = -20;
 
