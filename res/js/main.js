@@ -858,12 +858,34 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
                 welcomeContainers.forEach((container) => {
                     container.style.animation = "";
                 })
+
+                welcomeDescs.forEach((desc) => {
+                    desc.style.animation = "";
+                })
+
+                welcomeArrowContainers.forEach((container) => {
+                    container.classList.remove('welcomeArrowNextActive');
+                })
+
+                welcomeNextArrows.forEach((nextArrow) => {
+                    nextArrow.style.animation = "";
+                })
+
+                welcomePrevArrows.forEach((prevArrow) => {
+                    prevArrow.style.animation = "";
+                })
+
+                arrowCurrentLastSlide = false;
+                arrowCurrentSlide = 0;
             }, 200);
         }
 
         else{
             welcomeContainers[index].style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
             welcomeContainers[index + 1].style.animation = "welcomeSlideIn 200ms ease-in-out forwards";
+
+            arrowCurrentLastSlide = false;
+            arrowCurrentSlide = 0;
         }
     })
 })
@@ -1300,4 +1322,57 @@ openGameInfo.addEventListener('click', () => {
 
 leaveInfo.addEventListener('click', () => {
     info.style.animation = "fadeOut 300ms ease-in-out forwards";
+})
+
+// Welcome arrow sections
+const welcomeArrowContainers = document.querySelectorAll('.welcomeArrowContainer');
+const welcomePrevArrows = document.querySelectorAll('.welcomePrevArrow');
+const welcomeNextArrows = document.querySelectorAll('.welcomeNextArrow');
+const welcomeDescBxs = document.querySelectorAll('.welcome__textBx');
+const welcomeDescs = document.querySelectorAll('.welcomeArrowDesc');
+
+let arrowCurrentLastSlide = false;
+let arrowCurrentSlide = 0;
+
+welcomeArrowContainers.forEach((arrowContainer, index) => {
+    let welcomeDesc = welcomeDescBxs[index].querySelectorAll('.welcomeArrowDesc');
+
+    welcomeNextArrows[index].addEventListener('click', () => {
+        if((arrowCurrentSlide + 1) === welcomeDesc.length) return;
+
+        welcomeDesc[arrowCurrentSlide].style.animation = "welcomeNextSlideOutWithFade 400ms ease-in-out forwards";
+    
+        arrowCurrentSlide++;
+    
+        welcomeDesc[arrowCurrentSlide].style.animation = "welcomeNextSlideInWithFade 400ms ease-in-out forwards";
+    
+        if((arrowCurrentSlide + 1) === welcomeDesc.length){
+            welcomeNextArrows[index].style.animation = "fadeOut 225ms ease-in-out forwards";
+
+            if(!arrowCurrentLastSlide){
+                arrowCurrentLastSlide = true;
+                arrowContainer.classList.add('welcomeArrowNextActive');
+            }    
+        }
+        if(arrowCurrentSlide === 1){
+            welcomePrevArrows[index].style.animation = "fadeIn 300ms ease-in-out forwards";
+        }
+    })
+
+    welcomePrevArrows[index].addEventListener('click', () => {
+        if(arrowCurrentSlide === 0) return;
+        
+        welcomeDesc[arrowCurrentSlide].style.animation = "welcomePrevSlideOutWithFade 400ms ease-in-out forwards";
+    
+        arrowCurrentSlide--;
+    
+        welcomeDesc[arrowCurrentSlide].style.animation = "welcomePrevSlideInWithFade 400ms ease-in-out forwards";
+    
+        if(arrowCurrentSlide === 0){
+            welcomePrevArrows[index].style.animation = "fadeOut 225ms ease-in-out forwards";
+        }
+        if((arrowCurrentSlide + 2) === welcomeDesc.length){
+            welcomeNextArrows[index].style.animation = "fadeIn 300ms ease-in-out forwards";
+        }
+    })
 })
