@@ -143,7 +143,7 @@ let huntersInfo = [
 ]
 
 let gameSetting = {
-    time: 10,
+    time: 15,
     currentLvl: 1,
     nextLvlPts: 35,
     activeFieldsCount: 1,
@@ -153,6 +153,7 @@ let gameSetting = {
     ownHunters: [1],
     currentHunter: 1,
     bossLevelsCount: 0,
+    bossLevel: false,
     playerName: null,
     welcomeSlideshow: false,
     circleCursor: true,
@@ -164,7 +165,7 @@ let gameSetting = {
 }
 
 let initialGameSetting = {
-    time: 10,
+    time: 15,
     currentLvl: 1,
     nextLvlPts: 35,
     activeFieldsCount: 1,
@@ -174,6 +175,7 @@ let initialGameSetting = {
     ownHunters: [1],
     currentHunter: 1,
     bossLevelsCount: 0,
+    bossLevel: false,
     playerName: null,
     welcomeSlideshow: false,
     circleCursor: true,
@@ -630,7 +632,6 @@ function startGame(){
 function endGame(){
     showEndGamePopup();
     updateAnimalCountStats();
-    updateStatsText();
 
     setTimeout(() => {
         clearInterval(gameInterval);
@@ -648,6 +649,7 @@ function endGame(){
     
         resetGameVar();
         updateHunters();
+        updateStatsText();
     }, 300);
 }
 
@@ -669,7 +671,7 @@ function resetGameVar(){
     else if(gameSetting.points >= gameSetting.nextLvlPts) levelUp();
 
     currentTime = gameSetting.time;
-    timeText.innerText = currentTime    
+    timeText.innerText = currentTime;
     
     localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
 }
@@ -679,8 +681,6 @@ function updateStatsText(){
     timeStatText.innerText = gameSetting.time;
     nextLvlPtsStatText.innerText = gameSetting.nextLvlPts;
     currPtsStatText.innerText = gameSetting.points;
-    // allTimePtsStatText.innerText = gameSetting.allTimePoints;
-    // bossLevelsStatText.innerText = gameSetting.bossLevelsCount;
     
     homeNameText.innerText = gameSetting.playerName;
     settingNameText.innerText = gameSetting.playerName;
