@@ -195,66 +195,74 @@ let currentProgress = 0;
 let isSettingLoaded = false;
 
 function onLoadGameSetting(){
-    let loadedGameSetting = JSON.parse(localStorage.getItem('moleGameSetting'));
-
-    if(loadedGameSetting === null){
-        welcome.classList.add('initialActive');
+    try{
+        let loadedGameSetting = JSON.parse(localStorage.getItem('moleGameSetting'));
+    
+        if(loadedGameSetting === null){
+            welcome.classList.add('initialActive');
+        }
+    
+    
+        else if(
+                Object.keys(loadedGameSetting).length !== Object.keys(initialGameSetting).length ||
+                !loadedGameSetting.welcomeSlideshow ||
+                (initialGameSetting.nextLvlPts !== loadedGameSetting.nextLvlPts && loadedGameSetting.currentLvl === 1)
+            ){
+            localStorage.removeItem('moleGameSetting');
+            welcome.classList.add('initialActive');
+        }
+    
+        else{
+            welcome.classList.add('backActive');
+            welcomeBackName.innerText = loadedGameSetting.playerName;
+    
+            gameSetting = loadedGameSetting;
+            isSettingLoaded = true;
+    
+            updateStatsText();
+    
+            // Set points and progress bar
+            ptsText.innerText = gameSetting.points;
+    
+            currentProgressStep = (100 / gameSetting.nextLvlPts);
+            currentProgress = currentProgressStep * gameSetting.points;
+    
+            progressBar.style.width = `${currentProgress}%`;
+    
+            // Update setting
+            if(!gameSetting.circleCursor){
+                // Disable circle cursor, change shop btn text
+                circleCursor.style.display = "none";
+    
+                circleCursorInner.style.scale = 0;
+                circleCursorOuter.style.scale = 0;
+    
+                document.body.classList.remove('disabledCursor');
+                settingCircleBtn.innerText = "Enable Circle Cursor";
+    
+                setTimeout(() => {
+                    circleCursor.style.display = "block";
+                }, 300);
+            }
+    
+            if(!gameSetting.hammerCursor){
+                // Disable circle cursor, change shop btn text
+                game.style.cursor = "auto";
+                hammerCursor.style.display = "none";
+    
+                settingHammerBtn.innerText = "Enable Hammer Cursor";
+            }
+        }
+    
+        updateHunters();
+        preloadCover.style.display = "none";
     }
+    catch(err){
+        console.error('There is some error');
+        console.error(err);
 
-
-    else if(
-            Object.keys(loadedGameSetting).length !== Object.keys(initialGameSetting).length ||
-            !loadedGameSetting.welcomeSlideshow ||
-            (initialGameSetting.nextLvlPts !== loadedGameSetting.nextLvlPts && loadedGameSetting.currentLvl === 1)
-        ){
         localStorage.removeItem('moleGameSetting');
-        welcome.classList.add('initialActive');
     }
-
-    else{
-        welcome.classList.add('backActive');
-        welcomeBackName.innerText = loadedGameSetting.playerName;
-
-        gameSetting = loadedGameSetting;
-        isSettingLoaded = true;
-
-        updateStatsText();
-
-        // Set points and progress bar
-        ptsText.innerText = gameSetting.points;
-
-        currentProgressStep = (100 / gameSetting.nextLvlPts);
-        currentProgress = currentProgressStep * gameSetting.points;
-
-        progressBar.style.width = `${currentProgress}%`;
-
-        // Update setting
-        if(!gameSetting.circleCursor){
-            // Disable circle cursor, change shop btn text
-            circleCursor.style.display = "none";
-
-            circleCursorInner.style.scale = 0;
-            circleCursorOuter.style.scale = 0;
-
-            document.body.classList.remove('disabledCursor');
-            settingCircleBtn.innerText = "Enable Circle Cursor";
-
-            setTimeout(() => {
-                circleCursor.style.display = "block";
-            }, 300);
-        }
-
-        if(!gameSetting.hammerCursor){
-            // Disable circle cursor, change shop btn text
-            game.style.cursor = "auto";
-            hammerCursor.style.display = "none";
-
-            settingHammerBtn.innerText = "Enable Hammer Cursor";
-        }
-    }
-
-    updateHunters();
-    preloadCover.style.display = "none";
 }
 
 onLoadGameSetting();
@@ -381,7 +389,6 @@ class EventListener{
             gameAnimalsCount[animalId - 1]++;
             gameSetting.gameAnimalCount[animalId - 1]++;
             gamePointsCount += animalStats.pointValue;
-            console.log(gamePointsCount);
             gameCoinsCount += animalStats.coinValue;
 
             gameSetting.levelAnimalCount[animalId - 1]++;
@@ -677,9 +684,16 @@ function resetGameVar(){
 }
 
 function updateStatsText(){
+    if(gameSetting.bossLevel){
+        nextLvlPtsStatText.innerText = `${0} - Boss Level`;
+        timeStatText.innerText = 10;
+    }
+    else{
+        nextLvlPtsStatText.innerText = gameSetting.nextLvlPts;
+        timeStatText.innerText = gameSetting.time;
+    }
+
     levelStatText.innerText = gameSetting.currentLvl;
-    timeStatText.innerText = gameSetting.time;
-    nextLvlPtsStatText.innerText = gameSetting.nextLvlPts;
     currPtsStatText.innerText = gameSetting.points;
     
     homeNameText.innerText = gameSetting.playerName;
@@ -1245,9 +1259,17 @@ endGamePopupLeaveBtn.addEventListener('click', () => {
         // lvl popup
         preloadCover.style.display = "block";
 
-        lvlPopupCurrLvl.innerText = gameSetting.currentLvl;
-        lvlPopupNextLvl.innerText = gameSetting.currentLvl + 1;
-        lvlPopupNextLvlPts.innerText = gameSetting.nextLvlPts;
+        if(gameSetting.bossLevel){
+            lvlPopupCurrLvl.innerText = gameSetting.currentLvl;
+            lvlPopupNextLvl.innerText = `${gameSetting.currentLvl + 1} - Boss Level, `;
+            lvlPopupNextLvlPts.innerText = 0;
+        }
+        else{
+            lvlPopupCurrLvl.innerText = gameSetting.currentLvl;
+            lvlPopupNextLvl.innerText = gameSetting.currentLvl + 1;
+            lvlPopupNextLvlPts.innerText = gameSetting.nextLvlPts;
+        }
+
 
         setTimeout(() => {
             lvlPopup.style.animation = "fadeIn 300ms ease-in-out forwards";
