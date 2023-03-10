@@ -1042,6 +1042,9 @@ body.activeSetting .setting{
     justify-content: flex-end;
     column-gap: 32px;
 }
+.setting__bxGap{
+    margin-top: 28px;
+}
 .setting__btn{
     background-color: black;
     color: white;

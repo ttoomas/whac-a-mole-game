@@ -25,6 +25,15 @@ const settingCircleBtn = document.querySelector('.settingCircleBtn');
 const settingHammerBtn = document.querySelector('.settingHammerBtn');
 const homeNameText = document.querySelector('.setting__name');
 const settingNameText = document.querySelector('.setting__nameText');
+const settingSoundEffectsBtn = document.querySelector('.settingSoundEffectsBtn');
+const settingLobbyMusicBtn = document.querySelector('.settingLobbyMusicBtn');
+const settingGameMusicBtn = document.querySelector('.settingGameMusicBtn');
+
+const settingStatusCircle = document.querySelector('.setting__circleCursor .setting__textStatus');
+const settingStatusHammer = document.querySelector('.setting__hammerCursor .setting__textStatus');
+const settingStatusSoundEffects = document.querySelector('.setting__soundEffects .setting__textStatus');
+const settingStatusLobbyMusic = document.querySelector('.setting__lobbyMusic .setting__textStatus');
+const settingStatusGameMusic = document.querySelector('.setting__gameMusic .setting__textStatus');
 
 const welcome = document.querySelector('.welcome');
 const welcomeBackName = document.querySelector('.welcomeBackName');
@@ -56,6 +65,31 @@ const homeHunterImg = document.querySelector('.shopHunter__img');
 const shopHunters = document.querySelectorAll('.shop__hunter');
 const shopHunterCosts = document.querySelectorAll('.hunter__cost');
 const shopHunterBtns = document.querySelectorAll('.hunter__btn');
+
+
+
+const backgroundAudio = new Audio('./res/audio/background.mp3');
+const battleAudio = new Audio('./res/audio/battle.mp3');
+const hitAudio1 = new Audio('./res/audio/hit1.mp3');
+const hitAudio2 = new Audio('./res/audio/hit2.mp3');
+const hitAudio3 = new Audio('./res/audio/hit3.mp3');
+const hitAudio4 = new Audio('./res/audio/hit4.mp3');
+
+backgroundAudio.loop = true;
+battleAudio.loop = true;
+
+backgroundAudio.volume = 0.25;
+battleAudio.volume = 0.5;
+hitAudio1.volume = 0.4;
+hitAudio2.volume = 0.95;
+hitAudio3.volume = 0.4;
+hitAudio4.volume = 0.4;
+
+backgroundAudio.maxVolume = 0.25;
+battleAudio.maxVolume = 0.5;
+
+let hitAudioArr = [hitAudio1, hitAudio2, hitAudio3, hitAudio4];
+
 
 let mousePos = {
     x: 0,
@@ -161,7 +195,10 @@ let gameSetting = {
     levelAnimalCount: [0, 0, 0, 0, 0],
     levelPointsCount: 0,
     levelCoinsCount: 0,
-    gameAnimalCount: [0, 0, 0, 0, 0]
+    gameAnimalCount: [0, 0, 0, 0, 0],
+    soundEffects: true,
+    lobbyMusic: true,
+    gameMusic: true
 }
 
 let initialGameSetting = {
@@ -183,7 +220,10 @@ let initialGameSetting = {
     levelAnimalCount: [0, 0, 0, 0, 0],
     levelPointsCount: 0,
     levelCoinsCount: 0,
-    gameAnimalCount: [0, 0, 0, 0, 0]
+    gameAnimalCount: [0, 0, 0, 0, 0],
+    soundEffects: true,
+    lobbyMusic: true,
+    gameMusic: true
 }
 
 let currentTime;
@@ -239,6 +279,7 @@ function onLoadGameSetting(){
     
                 document.body.classList.remove('disabledCursor');
                 settingCircleBtn.innerText = "Enable Circle Cursor";
+                settingStatusCircle.innerText = "Enable";
     
                 setTimeout(() => {
                     circleCursor.style.display = "block";
@@ -251,7 +292,10 @@ function onLoadGameSetting(){
                 hammerCursor.style.display = "none";
     
                 settingHammerBtn.innerText = "Enable Hammer Cursor";
+                settingStatusHammer.innerText = "Enable";
             }
+
+            updateAudioSetting();
         }
     
         updateHunters();
@@ -377,6 +421,11 @@ class EventListener{
             let gameFieldAnimal = e.target.querySelector('.game__animal');
 
             if(!gameFieldAnimal.classList.contains('animalActive')) return;
+
+            if(gameSetting.soundEffects){
+                let randomHitId = randomNumber(0, (hitAudioArr.length - 1));
+                hitAudioArr[randomHitId].play();
+            }
 
             let animalId = gameFieldAnimal.getAttribute('data-animal-id');
             let animalStats = animalTypes[animalId - 1];
@@ -554,6 +603,9 @@ let gameInterval;
 startGameBtn.addEventListener('click', () => {
     setGame();
     changeCursor();
+
+    if(gameSetting.lobbyMusic) smoothAudioDown(backgroundAudio);
+    if(gameSetting.gameMusic) smoothAudioUp(battleAudio);
 })
 
 function setGame(){
@@ -637,6 +689,9 @@ function startGame(){
 }
 
 function endGame(){
+    if(gameSetting.lobbyMusic) smoothAudioUp(backgroundAudio);
+    if(gameSetting.gameMusic) smoothAudioDown(battleAudio);
+
     showEndGamePopup();
     updateAnimalCountStats();
 
@@ -868,6 +923,8 @@ welcomeNextBtns.forEach((welcomeBtn, index) => {
         else if(welcomeContainers[index].classList.contains('welcomeEndSlideshow')){
             gameSetting.welcomeSlideshow = true;
 
+            if(gameSetting.lobbyMusic) backgroundAudio.play();
+
             if(!isSettingLoaded){
                 localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
             }
@@ -921,6 +978,8 @@ const welcomeBack = document.querySelector('.welcomeBack');
 
 welcomeBackBtn.addEventListener('click', () => {
     welcomeBack.style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
+
+    if(gameSetting.lobbyMusic) backgroundAudio.play();;
 
     setTimeout(() => {
         welcome.style.display = "none";
@@ -1057,6 +1116,7 @@ settingCircleBtn.addEventListener('click', () => {
             document.body.classList.remove('disabledCursor');
 
             settingCircleBtn.innerText = "Enable Circle Cursor";
+            settingStatusCircle.innerText = "Enable";
         }, 200);
 
         setTimeout(() => {
@@ -1076,6 +1136,7 @@ settingCircleBtn.addEventListener('click', () => {
 
         setTimeout(() => {
             settingCircleBtn.innerText = "Disable Circle Cursor";
+            settingStatusCircle.innerText = "Disable";
             
             settingCircleBtn.disabled = false;
         }, 300);
@@ -1092,6 +1153,7 @@ settingHammerBtn.addEventListener('click', () => {
         localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
 
         settingHammerBtn.innerText = "Enable Hammer Cursor";
+        settingStatusHammer.innerText = "Enable";
     }
     else{
         // Enable
@@ -1102,6 +1164,7 @@ settingHammerBtn.addEventListener('click', () => {
         localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
 
         settingHammerBtn.innerText = "Disable Hammer Cursor";
+        settingStatusHammer.innerText = "Disable";
     }
 })
 
@@ -1128,6 +1191,68 @@ confirmResetBtn.addEventListener('click', () => {
 
     welcome.classList.add('initialActive');
 })
+
+// Audio setting
+settingSoundEffectsBtn.addEventListener('click', () => {
+    if(gameSetting.soundEffects) gameSetting.soundEffects = false;
+    else gameSetting.soundEffects = true;
+
+    updateAudioSetting();
+    localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+})
+
+settingLobbyMusicBtn.addEventListener('click', () => {
+    if(gameSetting.lobbyMusic){
+        gameSetting.lobbyMusic = false;
+
+        backgroundAudio.pause();
+    }
+    else{
+        gameSetting.lobbyMusic = true;
+
+        backgroundAudio.play();
+    }
+
+    updateAudioSetting();
+    localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+})
+
+settingGameMusicBtn.addEventListener('click', () => {
+    if(gameSetting.gameMusic) gameSetting.gameMusic = false;
+    else gameSetting.gameMusic = true;
+
+    updateAudioSetting();
+    localStorage.setItem('moleGameSetting', JSON.stringify(gameSetting));
+})
+
+function updateAudioSetting(){
+    if(gameSetting.soundEffects){
+        settingSoundEffectsBtn.innerText = "Mute Sound Effects";
+        settingStatusSoundEffects.innerText = "Mute";
+    }
+    else{
+        settingSoundEffectsBtn.innerText = "Un-Mute Sound Effects";
+        settingStatusSoundEffects.innerText = "Un-Mute";
+    }
+
+    if(gameSetting.lobbyMusic){
+        settingLobbyMusicBtn.innerText = "Turn Off Lobby Music";
+        settingStatusLobbyMusic.innerText = "Turn Off";
+    }
+    else{
+        settingLobbyMusicBtn.innerText = "Turn On Lobby Music";
+        settingStatusLobbyMusic.innerText = "Turn On";
+    }
+
+    if(gameSetting.gameMusic){
+        settingGameMusicBtn.innerText = "Turn Off Game Music";
+        settingStatusGameMusic.innerText = "Turn Off";
+    }
+    else{
+        settingGameMusicBtn.innerText = "Turn On Game Music";
+        settingStatusGameMusic.innerText = "Turn On";
+    }
+}
 
 
 // Helper - Update hunters (current, shop btns)
@@ -1410,3 +1535,50 @@ welcomeArrowContainers.forEach((arrowContainer, index) => {
         }
     })
 })
+
+// Smooth volume up or down
+function smoothAudioDown(audio){
+    if(audio.volume){
+        let startVolume = audio.volume;
+        let setVolume = 0;
+        let speed = 0.01;
+
+        audio.volume = startVolume;
+
+        let audioInterval = setInterval(() => {
+            startVolume -= speed;
+            audio.volume = startVolume.toFixed(1);
+
+            if(startVolume.toFixed(1) <= setVolume){
+                clearInterval(audioInterval);
+
+                audio.pause();
+            }
+        }, 50)
+    }
+}
+
+function smoothAudioUp(audio){
+    if(audio.volume || !isNaN(audio.volume)){
+        audio.play();
+
+        let startVolume = 0;
+        let setVolume = audio.maxVolume;
+        let speed = 0.01;
+
+        audio.volume = startVolume;
+
+        let audioInterval = setInterval(() => {
+            startVolume += speed;
+            audio.volume = startVolume.toFixed(1);
+
+            if(startVolume.toFixed(1) >= setVolume){
+                clearInterval(audioInterval);
+
+                if(audio.src.includes('battle')){
+                    audio.time = 0;
+                }
+            }
+        }, 50)
+    }
+}

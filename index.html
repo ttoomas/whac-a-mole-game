@@ -7,6 +7,10 @@
     <title>Whac-A-Mole Viking Edition</title>
 
     <link rel="stylesheet" href="./res/css/style.css">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="./res/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./res/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./res/favicon/favicon-16x16.png">
 </head>
 <body class="activeHome disabledCursor">
 
@@ -204,17 +208,32 @@
             </div>
     
             <div class="setting__bx setting__circleCursor">
-                <p class="setting__text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Expedita, exercitationem.</p>
+                <p class="setting__text"><span class="setting__textStatus">Disable</span> the unique circle cursor that displays in the lobby</p>
                 <button class="setting__btn settingCircleBtn circleCursor smallCursor">Disable Circle Cursor</button>
             </div>
     
             <div class="setting__bx setting__hammerCursor">
-                <p class="setting__text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, accusamus.</p>
+                <p class="setting__text"><span class="setting__textStatus">Disable</span> the special hammer cursor that appears in the game</p>
                 <button class="setting__btn settingHammerBtn circleCursor smallCursor">Disable Hammer Cursor</button>
             </div>
     
-            <div class="setting__bx setting__resetGame">
-                <p class="setting__text">If you reset the whole game, you will start from the beggining</p>
+            <div class="setting__bx setting__bxGap setting__soundEffects">
+                <p class="setting__text"><span class="setting__textStatus">Mute</span> the sound effects that play when you hit a monster</p>
+                <button class="setting__btn settingSoundEffectsBtn circleCursor smallCursor">Mute Sound Effects</button>
+            </div>
+    
+            <div class="setting__bx setting__lobbyMusic">
+                <p class="setting__text"><span class="setting__textStatus">Turn  off</span> the background music that plays in the lobby</p>
+                <button class="setting__btn settingLobbyMusicBtn circleCursor smallCursor">Turn Off Lobby Music</button>
+            </div>
+    
+            <div class="setting__bx setting__gameMusic">
+                <p class="setting__text"><span class="setting__textStatus">Turn  off</span> the background music that plays during the game</p>
+                <button class="setting__btn settingGameMusicBtn circleCursor smallCursor">Turn Off Game Music</button>
+            </div>
+    
+            <div class="setting__bx setting__bxGap setting__resetGame">
+                <p class="setting__text">Start fresh and reset all game progress - there is no way back!</p>
                 <button class="setting__btn settingResetBtn circleCursor smallCursor">Reset Game</button>
             </div>
         </div>
