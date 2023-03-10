@@ -78,12 +78,12 @@ const hitAudio4 = new Audio('./res/audio/hit4.mp3');
 backgroundAudio.loop = true;
 battleAudio.loop = true;
 
-backgroundAudio.volume = 0.25;
-battleAudio.volume = 0.5;
-hitAudio1.volume = 0.4;
-hitAudio2.volume = 0.95;
-hitAudio3.volume = 0.4;
-hitAudio4.volume = 0.4;
+backgroundAudio.volume = 0.3;
+battleAudio.volume = 0.6;
+hitAudio1.volume = 0.08;
+hitAudio2.volume = 0.9;
+hitAudio3.volume = 0.2;
+hitAudio4.volume = 0.06;
 
 backgroundAudio.maxVolume = 0.25;
 battleAudio.maxVolume = 0.5;
@@ -317,6 +317,7 @@ createGameFields(fieldsCount);
 let fieldIntervals = [];
 let currentGameEnded = false;
 let currentResetActive = false;
+let currentHitAudio = null;
 
 
 class Field{
@@ -423,8 +424,15 @@ class EventListener{
             if(!gameFieldAnimal.classList.contains('animalActive')) return;
 
             if(gameSetting.soundEffects){
-                let randomHitId = randomNumber(0, (hitAudioArr.length - 1));
+                let randomHitId;
+
+                do {
+                    randomHitId = randomNumber(0, (hitAudioArr.length - 1));
+                } while (hitAudioArr[randomHitId].paused === false);
+
+                console.log(hitAudioArr[randomHitId].paused);
                 hitAudioArr[randomHitId].play();
+                console.log(hitAudioArr[randomHitId].paused);
             }
 
             let animalId = gameFieldAnimal.getAttribute('data-animal-id');
@@ -672,7 +680,7 @@ function startGame(){
     }
     else{
         for (let i = 0; i < gameSetting.activeFieldsCount; i++) {
-            new Field(300, 1000);
+            new Field(300, 700);
         }
     }
 
@@ -979,7 +987,7 @@ const welcomeBack = document.querySelector('.welcomeBack');
 welcomeBackBtn.addEventListener('click', () => {
     welcomeBack.style.animation = "welcomeSlideOut 200ms ease-in-out forwards";
 
-    if(gameSetting.lobbyMusic) backgroundAudio.play();;
+    if(gameSetting.lobbyMusic) backgroundAudio.play();
 
     setTimeout(() => {
         welcome.style.display = "none";
